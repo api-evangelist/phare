@@ -1,0 +1,33 @@
+generated: '2026-09-27'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://docs.phare.io/integrations/outgoing-webhook.md
+sources:
+- https://docs.phare.io/integrations/outgoing-webhook.md
+description: Phare outgoing webhooks deliver alert data via HTTP POST with HMAC‑SHA256 signing and no documented retry behavior.
+events:
+- event: Monitor Created
+  description: Triggered when a new monitor is created.
+- event: Monitor Deleted
+  description: Triggered when an existing monitor is deleted.
+- event: Monitor Certificate Discovered
+  description: Triggered when a certificate is discovered for a monitor.
+- event: Monitor Certificate Expiring
+  description: Triggered when a monitor's certificate is nearing expiration.
+- event: Incident Created
+  description: Triggered when a new incident is created.
+- event: Incident Recovered
+  description: Triggered when an incident is recovered.
+- event: Incident Propagated
+  description: Triggered when an incident propagates to a new monitor.
+- event: Incident Partially Recovered
+  description: Triggered when an incident is partially recovered.
+- event: Incident Comment Created
+  description: Triggered when a comment is added to an incident.
+- event: Incident Update Published
+  description: Triggered when an update is published for an incident.
+delivery:
+  content_type: application/json
+note: Each request includes the headers X-Phare-Request-Id, X-Phare-Request-Event, X-Phare-Request-Timestamp, and X-Phare-Request-Signature (HMAC‑SHA256).
+  No retry policy is described on the page.
+docs: https://docs.phare.io/integrations/outgoing-webhook.md

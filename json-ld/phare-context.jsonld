@@ -1,0 +1,93 @@
+{
+  "@context": {
+    "@vocab": "https://phare.io/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "phare": "https://phare.io/schema#",
+    "meta": "phare:meta",
+    "current_page": {
+      "@id": "phare:current_page",
+      "@type": "xsd:integer"
+    },
+    "from": {
+      "@id": "phare:from",
+      "@type": "xsd:integer"
+    },
+    "to": {
+      "@id": "phare:to",
+      "@type": "xsd:integer"
+    },
+    "per_page": {
+      "@id": "phare:per_page",
+      "@type": "xsd:integer"
+    },
+    "path": {
+      "@id": "phare:path",
+      "@type": "xsd:string"
+    },
+    "links": "phare:links",
+    "first": {
+      "@id": "phare:first",
+      "@type": "@id"
+    },
+    "last": {
+      "@id": "phare:last",
+      "@type": "@id"
+    },
+    "prev": {
+      "@id": "phare:prev",
+      "@type": "@id"
+    },
+    "next": {
+      "@id": "phare:next",
+      "@type": "@id"
+    },
+    "Platform.App.Ntfy.AlertRuleSettings": "phare:Platform.App.Ntfy.AlertRuleSettings",
+    "priority": {
+      "@id": "phare:priority",
+      "@type": "xsd:string"
+    },
+    "Platform.App.OutgoingWebhook.AlertRuleSettings": "phare:Platform.App.OutgoingWebhook.AlertRuleSettings",
+    "Platform.App.Pushover.AlertRuleSettings": "phare:Platform.App.Pushover.AlertRuleSettings",
+    "retry": {
+      "@id": "phare:retry",
+      "@type": "xsd:integer"
+    },
+    "expire": {
+      "@id": "phare:expire",
+      "@type": "xsd:integer"
+    },
+    "Platform.Event.UptimeIncident.AlertRuleSettings": "phare:Platform.Event.UptimeIncident.AlertRuleSettings",
+    "type": {
+      "@id": "phare:type",
+      "@type": "xsd:string"
+    },
+    "Platform.Event.UptimeMonitorCertificateExpiring.AlertRuleSettings": "phare:Platform.Event.UptimeMonitorCertificateExpiring.AlertRuleSettings",
+    "days_before_expiry": {
+      "@id": "phare:days_before_expiry",
+      "@type": "xsd:integer"
+    },
+    "Uptime.ProductEvents": "phare:Uptime.ProductEvents",
+    "Phare.User.UserRoleEnum": "phare:Phare.User.UserRoleEnum",
+    "Uptime.Incident.ImpactEnum": "phare:Uptime.Incident.ImpactEnum",
+    "Uptime.Incident.StateEnum": "phare:Uptime.Incident.StateEnum",
+    "Uptime.Incident.StatusEnum": "phare:Uptime.Incident.StatusEnum",
+    "Uptime.Incident.TypeEnum": "phare:Uptime.Incident.TypeEnum",
+    "Uptime.MaintenanceWindow.MonitoringModeEnum": "phare:Uptime.MaintenanceWindow.MonitoringModeEnum",
+    "Uptime.MaintenanceWindow.StateEnum": "phare:Uptime.MaintenanceWindow.StateEnum",
+    "Uptime.Monitor.ConnectionEnum": "phare:Uptime.Monitor.ConnectionEnum",
+    "Uptime.Monitor.ProtocolEnum": "phare:Uptime.Monitor.ProtocolEnum",
+    "Uptime.Monitor.RegionEnum": "phare:Uptime.Monitor.RegionEnum",
+    "Uptime.Monitor.StatusEnum": "phare:Uptime.Monitor.StatusEnum",
+    "Uptime.StatusPage.SubscriptionChannelEnum": "phare:Uptime.StatusPage.SubscriptionChannelEnum",
+    "Platform.App.AppEnum": "phare:Platform.App.AppEnum"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Phare API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Phare's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-09-27) from openapi/phare-openapi.json.",
+  "dcterms:created": "2026-09-27",
+  "dcterms:source": [
+    "openapi/phare-openapi.json"
+  ]
+}

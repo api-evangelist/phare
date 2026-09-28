@@ -1,0 +1,119 @@
+generated: '2026-09-28'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 7
+  own: 5
+  other_domain: 1
+  platform: 1
+  roles:
+  - api
+  - docs
+  - other
+  - portal
+  - source
+  - status
+  - website
+hosts:
+- host: api.phare.io
+  found_by:
+  - apis[]
+  - contract-discovery
+  types: []
+  serves:
+  - api
+  registrable_domain: phare.io
+  role: api
+  relation: own
+- host: app.phare.io
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - DeveloperPortal
+  - SignUp
+  serves: []
+  registrable_domain: phare.io
+  role: portal
+  relation: own
+- host: docs.phare.io
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - spec-found
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - ChangeLog
+  - GettingStarted
+  - APIReference
+  - Documentation
+  serves:
+  - docs
+  - spec
+  - cdn
+  - hosting
+  vendor: cloudflare
+  registrable_domain: phare.io
+  role: docs
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: phare.io
+  found_by:
+  - pointer
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - Security
+  - TermsOfService
+  - PrivacyPolicy
+  - Website
+  - Pricing
+  - Blog
+  serves:
+  - docs
+  registrable_domain: phare.io
+  role: website
+  relation: own
+- host: pushover.net
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: pushover.net
+  role: other
+  relation: other-domain
+- host: status.phare.io
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - StatusPage
+  serves:
+  - docs
+  registrable_domain: phare.io
+  role: status
+  relation: own

@@ -1,0 +1,1165 @@
+openapi: 3.2.0
+info:
+  title: Phare Incidents API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Incidents
+  description: Incidents
+paths:
+  /uptime/incidents:
+    get:
+      tags:
+      - Incidents
+      summary: List incidents
+      description: Get a paginated list of incidents
+      operationId: getUptimeIncidents
+      parameters:
+      - name: monitor_id
+        in: query
+        description: Filter incidents by monitor ID. Can be specified multiple times to filter by multiple monitor IDs.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, incidents retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        project_id:
+                          description: Parent project ID
+                          type: integer
+                          example: 1
+                        type:
+                          $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                        slug:
+                          description: Incident unique slug name
+                          type: string
+                          example: APP-123
+                        impact:
+                          $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                        state:
+                          $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                        status:
+                          $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                        title:
+                          description: Incident title
+                          type: string
+                          example: Service is not working as expected
+                          maximum: 250
+                          minimum: 1
+                        description:
+                          description: Description of the error that caused the incident
+                          type: string
+                          example: 'The server answered with an unexpected status code: 503.'
+                          maximum: 2000
+                          minimum: 1
+                        exclude_from_downtime:
+                          description: Flag to exclude the incident from downtime calculations
+                          type: boolean
+                          example: false
+                        incident_at:
+                          description: Date of incident confirmation
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        recovery_at:
+                          description: Date of incident recovery
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        monitors:
+                          description: List of monitors linked to the incident
+                          type: array
+                          items:
+                            type: integer
+                          example:
+                          - 1
+                          - 2
+                          - 3
+                          maxItems: 100
+                          minItems: 1
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - impact
+                      - title
+                      - exclude_from_downtime
+                  meta:
+                    $ref: '#/components/schemas/meta'
+                  links:
+                    $ref: '#/components/schemas/links'
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+    post:
+      tags:
+      - Incidents
+      summary: Create an incident
+      operationId: createUptimeIncident
+      requestBody:
+        description: Incident request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  description: Incident title
+                  type: string
+                  example: Service is not working as expected
+                  maximum: 250
+                  minimum: 1
+                description:
+                  description: Description of the error that caused the incident
+                  type: string
+                  example: 'The server answered with an unexpected status code: 503.'
+                  maximum: 2000
+                  minimum: 1
+                exclude_from_downtime:
+                  description: Flag to exclude the incident from downtime calculations
+                  type: boolean
+                  example: false
+                incident_at:
+                  description: Date of incident confirmation
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                recovery_at:
+                  description: Date of incident recovery
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                monitors:
+                  description: List of monitors linked to the incident
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                  - 1
+                  - 2
+                  - 3
+                  maxItems: 100
+                  minItems: 1
+                impact:
+                  description: Incident impact
+                  type: string
+                  enum:
+                  - unknown
+                  - degraded_performance
+                  - partial_outage
+                  - major_outage
+              required:
+              - impact
+              - title
+              - exclude_from_downtime
+      responses:
+        '201':
+          description: Success, incident created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  type:
+                    $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                  slug:
+                    description: Incident unique slug name
+                    type: string
+                    example: APP-123
+                  impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  status:
+                    $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                  title:
+                    description: Incident title
+                    type: string
+                    example: Service is not working as expected
+                    maximum: 250
+                    minimum: 1
+                  description:
+                    description: Description of the error that caused the incident
+                    type: string
+                    example: 'The server answered with an unexpected status code: 503.'
+                    maximum: 2000
+                    minimum: 1
+                  exclude_from_downtime:
+                    description: Flag to exclude the incident from downtime calculations
+                    type: boolean
+                    example: false
+                  incident_at:
+                    description: Date of incident confirmation
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  recovery_at:
+                    description: Date of incident recovery
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  monitors:
+                    description: List of monitors linked to the incident
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - impact
+                - title
+                - exclude_from_downtime
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+      parameters:
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+  /uptime/incidents/{incidentId}:
+    get:
+      tags:
+      - Incidents
+      summary: Get an incident
+      description: Get an incident by ID
+      operationId: getUptimeIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident to show
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, incident retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  type:
+                    $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                  slug:
+                    description: Incident unique slug name
+                    type: string
+                    example: APP-123
+                  impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  status:
+                    $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                  title:
+                    description: Incident title
+                    type: string
+                    example: Service is not working as expected
+                    maximum: 250
+                    minimum: 1
+                  description:
+                    description: Description of the error that caused the incident
+                    type: string
+                    example: 'The server answered with an unexpected status code: 503.'
+                    maximum: 2000
+                    minimum: 1
+                  exclude_from_downtime:
+                    description: Flag to exclude the incident from downtime calculations
+                    type: boolean
+                    example: false
+                  incident_at:
+                    description: Date of incident confirmation
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  recovery_at:
+                    description: Date of incident recovery
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  monitors:
+                    description: List of monitors linked to the incident
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - impact
+                - title
+                - exclude_from_downtime
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+      - Incidents
+      summary: Update an incident
+      description: Update an incident by ID
+      operationId: updateUptimeIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident to update
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      requestBody:
+        description: Incident request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  description: Incident title
+                  type: string
+                  example: Service is not working as expected
+                  maximum: 250
+                  minimum: 1
+                description:
+                  description: Description of the error that caused the incident
+                  type: string
+                  example: 'The server answered with an unexpected status code: 503.'
+                  maximum: 2000
+                  minimum: 1
+                exclude_from_downtime:
+                  description: Flag to exclude the incident from downtime calculations
+                  type: boolean
+                  example: false
+                incident_at:
+                  description: Date of incident confirmation
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                recovery_at:
+                  description: Date of incident recovery
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                monitors:
+                  description: List of monitors linked to the incident
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                  - 1
+                  - 2
+                  - 3
+                  maxItems: 100
+                  minItems: 1
+                impact:
+                  description: Incident impact
+                  type: string
+                  enum:
+                  - unknown
+                  - degraded_performance
+                  - partial_outage
+                  - major_outage
+      responses:
+        '200':
+          description: Success, incident updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  type:
+                    $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                  slug:
+                    description: Incident unique slug name
+                    type: string
+                    example: APP-123
+                  impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  status:
+                    $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                  title:
+                    description: Incident title
+                    type: string
+                    example: Service is not working as expected
+                    maximum: 250
+                    minimum: 1
+                  description:
+                    description: Description of the error that caused the incident
+                    type: string
+                    example: 'The server answered with an unexpected status code: 503.'
+                    maximum: 2000
+                    minimum: 1
+                  exclude_from_downtime:
+                    description: Flag to exclude the incident from downtime calculations
+                    type: boolean
+                    example: false
+                  incident_at:
+                    description: Date of incident confirmation
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  recovery_at:
+                    description: Date of incident recovery
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  monitors:
+                    description: List of monitors linked to the incident
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - impact
+                - title
+                - exclude_from_downtime
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+    delete:
+      tags:
+      - Incidents
+      summary: Delete an incident
+      description: Delete an incident by ID
+      operationId: deleteUptimeIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident to delete
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, incident deleted
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+  /uptime/incidents/{incidentId}/recover:
+    post:
+      tags:
+      - Incidents
+      summary: Recover a incident
+      description: Recover a incident by ID
+      operationId: recoverUptimeIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident to recover
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, incident recovered
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+  /uptime/incidents/{incidentId}/updates:
+    get:
+      tags:
+      - Incidents
+      summary: List incident updates
+      description: Get a paginated list of incident updates
+      operationId: getUptimeIncidentUpdates
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, incident updates retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: Incident update ID
+                          type: integer
+                          example: 1
+                        state:
+                          $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                        content:
+                          description: Content of the incident update
+                          type: string
+                          example: We are investigating the issue.
+                          maximum: 10000
+                          minimum: 1
+                        published_at:
+                          description: Date of publication of the incident update
+                          type: string
+                          format: date-time
+                        creator:
+                          description: Creator of the incident update
+                          properties:
+                            id:
+                              description: Creator ID
+                              type: integer
+                              example: 1
+                            type:
+                              description: Creator type
+                              type: string
+                              example: user
+                              enum:
+                              - user
+                              - api_key
+                            label:
+                              description: Creator label
+                              type: string
+                              example: nicolas@phare.io
+                          type: object
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - state
+                      - content
+                  meta:
+                    $ref: '#/components/schemas/meta'
+                  links:
+                    $ref: '#/components/schemas/links'
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+    post:
+      tags:
+      - Incidents
+      summary: Create an incident update
+      operationId: createUptimeIncidentUpdate
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      requestBody:
+        description: Incident update request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                content:
+                  description: Content of the incident update
+                  type: string
+                  example: We are investigating the issue.
+                  maximum: 10000
+                  minimum: 1
+                published_at:
+                  description: Date of publication of the incident update
+                  type: string
+                  format: date-time
+              required:
+              - state
+              - content
+      responses:
+        '201':
+          description: Success, incident update created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Incident update ID
+                    type: integer
+                    example: 1
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  content:
+                    description: Content of the incident update
+                    type: string
+                    example: We are investigating the issue.
+                    maximum: 10000
+                    minimum: 1
+                  published_at:
+                    description: Date of publication of the incident update
+                    type: string
+                    format: date-time
+                  creator:
+                    description: Creator of the incident update
+                    properties:
+                      id:
+                        description: Creator ID
+                        type: integer
+                        example: 1
+                      type:
+                        description: Creator type
+                        type: string
+                        example: user
+                        enum:
+                        - user
+                        - api_key
+                      label:
+                        description: Creator label
+                        type: string
+                        example: nicolas@phare.io
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - state
+                - content
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+  /uptime/incidents/{incidentId}/updates/{incidentUpdateId}:
+    get:
+      tags:
+      - Incidents
+      summary: Get an incident update
+      description: Get an incident update by ID
+      operationId: getUptimeIncidentUpdate
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident
+        required: true
+        schema:
+          type: integer
+      - name: incidentUpdateId
+        in: path
+        description: ID of the incident update to show
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, incident update retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Incident update ID
+                    type: integer
+                    example: 1
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  content:
+                    description: Content of the incident update
+                    type: string
+                    example: We are investigating the issue.
+                    maximum: 10000
+                    minimum: 1
+                  published_at:
+                    description: Date of publication of the incident update
+                    type: string
+                    format: date-time
+                  creator:
+                    description: Creator of the incident update
+                    properties:
+                      id:
+                        description: Creator ID
+                        type: integer
+                        example: 1
+                      type:
+                        description: Creator type
+                        type: string
+                        example: user
+                        enum:
+                        - user
+                        - api_key
+                      label:
+                        description: Creator label
+                        type: string
+                        example: nicolas@phare.io
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - state
+                - content
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+      - Incidents
+      summary: Update an incident update
+      description: Update an incident update by ID
+      operationId: updateUptimeIncidentUpdate
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident
+        required: true
+        schema:
+          type: integer
+      - name: incidentUpdateId
+        in: path
+        description: ID of the incident update to update
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      requestBody:
+        description: Incident update request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                content:
+                  description: Content of the incident update
+                  type: string
+                  example: We are investigating the issue.
+                  maximum: 10000
+                  minimum: 1
+                published_at:
+                  description: Date of publication of the incident update
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Success, incident update updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Incident update ID
+                    type: integer
+                    example: 1
+                  state:
+                    $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                  content:
+                    description: Content of the incident update
+                    type: string
+                    example: We are investigating the issue.
+                    maximum: 10000
+                    minimum: 1
+                  published_at:
+                    description: Date of publication of the incident update
+                    type: string
+                    format: date-time
+                  creator:
+                    description: Creator of the incident update
+                    properties:
+                      id:
+                        description: Creator ID
+                        type: integer
+                        example: 1
+                      type:
+                        description: Creator type
+                        type: string
+                        example: user
+                        enum:
+                        - user
+                        - api_key
+                      label:
+                        description: Creator label
+                        type: string
+                        example: nicolas@phare.io
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - state
+                - content
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+    delete:
+      tags:
+      - Incidents
+      summary: Delete an incident update
+      description: Delete an incident update by ID
+      operationId: deleteUptimeIncidentUpdate
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident
+        required: true
+        schema:
+          type: integer
+      - name: incidentUpdateId
+        in: path
+        description: ID of the incident update to delete
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, incident update deleted
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+components:
+  schemas:
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
+    Uptime.Incident.TypeEnum:
+      type: string
+      enum:
+      - monitor
+      - manual
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    links:
+      description: Links for pagination
+      properties:
+        first:
+          type: string
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+      type: object
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+  parameters:
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+  responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+    '404':
+      description: Error, resource not found
+      content:
+        application/json:
+          schema:
+            description: Not found error schema
+            properties:
+              message:
+                type: string
+                example: Resource not found
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports

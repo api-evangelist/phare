@@ -1,0 +1,89 @@
+# Phare Documentation
+
+- [Introduction to the Phare Documentation](https://docs.phare.io/introduction.md): Discover how Phare can help with website and server uptime monitoring, incident management, and much more.
+- [Getting started with Phare](https://docs.phare.io/getting-started.md): Get up and running with the Phare platform, learn how to create your account, select a plan, and set up your first project.
+- [User management](https://docs.phare.io/user-management.md): Learn how to manage users and roles in Phare, invite team members, and control project access.
+- [Account settings and security](https://docs.phare.io/account-settings.md): Update profile preferences, contact details, and two-factor authentication.
+- [Billing and quotas](https://docs.phare.io/billing-quotas.md): Track usage, manage quotas, and review plan details.
+- [Overview of Phare Uptime](https://docs.phare.io/uptime/overview.md): Monitor your websites, manage incidents and create status pages
+- [Monitors](https://docs.phare.io/uptime/monitors.md): Monitor the availability of your websites, APIs and servers.
+- [Incident Management](https://docs.phare.io/uptime/incidents.md): Learn how to manage the lifecycle of an incident with Phare Uptime incident management.
+- [Maintenance Windows](https://docs.phare.io/uptime/maintenance-windows.md): Plan scheduled downtime, control monitoring behavior, and keep users informed during maintenance.
+- [Status pages](https://docs.phare.io/uptime/status-pages.md): Keep your customers in the loop with a sleek status page. Build trust with transparent communication on incidents and maintenance periods.
+- [Certificate management](https://docs.phare.io/uptime/certificates.md): Discover how Phare helps you discover, manage, and monitor SSL/TLS certificates.
+- [Alerting and Alert Rules](https://docs.phare.io/uptime/alerting.md): Learn how to configure alert rules with Phare Uptime.
+- [Overview](https://docs.phare.io/integrations/overview.md): Seamlessly connect your favorite apps and services with Phare
+- [Integrate Discord with Phare](https://docs.phare.io/integrations/discord.md): Set up the Phare Discord integration to receive messages in your Discord server when your websites or APIs are down.
+- [Integrate Emails with Phare](https://docs.phare.io/integrations/email.md): Set up the Phare email integration to receive alerts when your website or server is down.
+- [Integrate ilert with Phare](https://docs.phare.io/integrations/ilert.md): Set up the Phare integration with ilert to route monitoring alerts to your on-call team with AI-first incident management.
+- [Integrate Ntfy.sh with Phare](https://docs.phare.io/integrations/ntfy.md): Set up the Phare integration with Ntfy.sh to receive alerts on your preferred device.
+- [Integrate Outgoing Webhooks with Phare](https://docs.phare.io/integrations/outgoing-webhook.md): Receive alerts by webhooks on third-party tools or build your own integration.
+- [Integrate Pushover with Phare](https://docs.phare.io/integrations/pushover.md): Set up the Phare integration with Pushover to receive alerts on your preferred device.
+- [Integrate SMS with Phare](https://docs.phare.io/integrations/sms.md): Set up the Phare SMS integration to receive a message on your phone when your website or server is down.
+- [Integrate Slack with Phare](https://docs.phare.io/integrations/slack.md): Set up the Phare integration for Slack to receive a message in your Slack workspace when your website or server is down.
+- [Integrate Telegram with Phare](https://docs.phare.io/integrations/telegram.md): Set up the Phare Telegram integration to receive alerts when your website or server is down.
+- [Phare Terraform Provider](https://docs.phare.io/integrations/terraform.md): Setup Phare with infrastructure as code using the official Terraform provider.
+- [Phare Ansible Collection (Community)](https://docs.phare.io/integrations/ansible.md): Setup and manage Phare with infrastructure as code using the community-built Ansible collection.
+- [Phare NixOS Module (Community)](https://docs.phare.io/integrations/nixos.md): Declare and manage Phare resources with infrastructure as code using the community-built NixOS module.
+- [API Introduction](https://docs.phare.io/api-reference/introduction.md): Create programmatic interactions with the Phare API.
+- [Get API info](https://docs.phare.io/api-reference/platform/get-api-info.md): Get basic API information
+- [List alert rules](https://docs.phare.io/api-reference/platform/alert-rules/list-alert-rules.md): Get a paginated list of alert rules.
+- [Create an alert rule](https://docs.phare.io/api-reference/platform/alert-rules/create-an-alert-rule.md): Create an alert rule
+- [Get an alert rule](https://docs.phare.io/api-reference/platform/alert-rules/get-an-alert-rule.md): Get an alert rule by ID
+- [Update an alert rule](https://docs.phare.io/api-reference/platform/alert-rules/update-an-alert-rule.md): Update an alert rule by ID
+- [Delete an alert rule](https://docs.phare.io/api-reference/platform/alert-rules/delete-an-alert-rule.md): Delete an alert rule by ID
+- [List integrations](https://docs.phare.io/api-reference/platform/integrations/list-integrations.md): Get a paginated list of integrations for a specific app.
+- [Get an integration](https://docs.phare.io/api-reference/platform/integrations/get-an-integration.md): Get an integration by ID
+- [List projects](https://docs.phare.io/api-reference/platform/projects/list-projects.md): Get a paginated list of projects.
+- [Create a project](https://docs.phare.io/api-reference/platform/projects/create-a-project.md): Create a project
+- [Get a project](https://docs.phare.io/api-reference/platform/projects/get-a-project.md): Get a project by ID
+- [Update a project](https://docs.phare.io/api-reference/platform/projects/update-a-project.md): Update a project by ID
+- [Delete a project](https://docs.phare.io/api-reference/platform/projects/delete-a-project.md): Delete a project by ID
+- [List users](https://docs.phare.io/api-reference/platform/users/list-users.md): Get a paginated list of users.
+- [Get a user](https://docs.phare.io/api-reference/platform/users/get-a-user.md): Get a user by ID
+- [List monitors](https://docs.phare.io/api-reference/uptime/monitors/list-monitors.md): Get a paginated list of monitors
+- [Get a monitor](https://docs.phare.io/api-reference/uptime/monitors/get-a-monitor.md): Get a monitor by ID
+- [Create a monitor](https://docs.phare.io/api-reference/uptime/monitors/create-a-monitor.md): Create a monitor
+- [Update a monitor](https://docs.phare.io/api-reference/uptime/monitors/update-a-monitor.md): Update a monitor by ID
+- [Pause a monitor](https://docs.phare.io/api-reference/uptime/monitors/pause-a-monitor.md): Pause a monitor by ID
+- [Resume a monitor](https://docs.phare.io/api-reference/uptime/monitors/resume-a-monitor.md): Resume a monitor by ID
+- [Delete a monitor](https://docs.phare.io/api-reference/uptime/monitors/delete-a-monitor.md): Delete a monitor by ID
+- [Get a monitor report](https://docs.phare.io/api-reference/uptime/monitors/get-a-monitor-report.md): Get uptime statistics for a single monitor by ID in the selected time window
+- [List incidents](https://docs.phare.io/api-reference/uptime/incidents/list-incidents.md): Get a paginated list of incidents
+- [Get an incident](https://docs.phare.io/api-reference/uptime/incidents/get-an-incident.md): Get an incident by ID
+- [Create an incident](https://docs.phare.io/api-reference/uptime/incidents/create-an-incident.md): Create an incident
+- [Update an incident](https://docs.phare.io/api-reference/uptime/incidents/update-an-incident.md): Update an incident by ID
+- [Recover a incident](https://docs.phare.io/api-reference/uptime/incidents/recover-an-incident.md): Recover a incident by ID
+- [Delete an incident](https://docs.phare.io/api-reference/uptime/incidents/delete-an-incident.md): Delete an incident by ID
+- [List incident updates](https://docs.phare.io/api-reference/uptime/incidents/updates/list-incident-updates.md): Get a paginated list of incident updates
+- [Get an incident update](https://docs.phare.io/api-reference/uptime/incidents/updates/get-an-incident-update.md): Get an incident update by ID
+- [Create an incident update](https://docs.phare.io/api-reference/uptime/incidents/updates/create-an-incident-update.md): Create an incident update
+- [Update an incident update](https://docs.phare.io/api-reference/uptime/incidents/updates/update-an-incident-update.md): Update an incident update by ID
+- [Delete an incident update](https://docs.phare.io/api-reference/uptime/incidents/updates/delete-an-incident-update.md): Delete an incident update by ID
+- [List maintenance windows](https://docs.phare.io/api-reference/uptime/maintenance-windows/list-maintenance-windows.md): Get a paginated list of maintenance windows
+- [Get a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/get-a-maintenance-window.md): Get a maintenance window by ID
+- [Create a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/create-a-maintenance-window.md): Create a maintenance window
+- [Update a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/update-a-maintenance-window.md): Update a maintenance window by ID
+- [Complete a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/complete-a-maintenance-window.md): Complete a maintenance window by ID
+- [Cancel a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/cancel-a-maintenance-window.md): Cancel a maintenance window by ID
+- [Delete a maintenance window](https://docs.phare.io/api-reference/uptime/maintenance-windows/delete-a-maintenance-window.md): Delete a maintenance window by ID
+- [List status pages](https://docs.phare.io/api-reference/uptime/status-pages/list-status-pages.md): Get a paginated list of status pages
+- [Get a status page](https://docs.phare.io/api-reference/uptime/status-pages/get-a-status-page.md): Get a status page by ID
+- [Create a status page](https://docs.phare.io/api-reference/uptime/status-pages/create-a-status-page.md): Create a status page
+- [Update a status page](https://docs.phare.io/api-reference/uptime/status-pages/update-a-status-page.md): Update a status page by ID
+- [Delete a status page](https://docs.phare.io/api-reference/uptime/status-pages/delete-a-status-page.md): Delete a status page by ID
+- [Get a status page current status](https://docs.phare.io/api-reference/uptime/status-pages/get-a-status-page-current-status.md): Get a status page current status by ID
+- [Get report](https://docs.phare.io/api-reference/uptime/reports/get-a-report.md): Get aggregated uptime statistics for the selected time window
+- [Changelog](https://docs.phare.io/changelog/platform/2026.md): Follow the updates and improvements made to the Phare platform in 2026.
+- [Changelog](https://docs.phare.io/changelog/platform/2025.md): Follow the updates and improvements made to the Phare platform in 2025.
+- [Changelog of 2024](https://docs.phare.io/changelog/platform/2024.md): Follow the updates and improvements made to the Phare platform in 2024.
+- [Changelog of 2023](https://docs.phare.io/changelog/platform/2023.md): Follow the updates and improvements made to the Phare platform in 2023.
+
+## OpenAPI Specs
+
+- [openapi](/openapi.json)
+
+## Optional
+
+- [Blog](https://phare.io/blog/)
+- [Service status](https://status.phare.io/)

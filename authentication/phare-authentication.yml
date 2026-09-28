@@ -1,0 +1,14 @@
+generated: '2026-09-27'
+method: derived
+source: openapi/phare-openapi.json
+summary:
+  types:
+  - http
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  description: 'Use a user token to access authenticated routes. The token must be specified
+    in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+  sources:
+  - openapi/phare-openapi.json

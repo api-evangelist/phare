@@ -1,23 +1,335 @@
 aid: phare
 name: Phare
-description: 'Phare is a company surfaced via the API Evangelist harvest backlog (source: new-submission)
-  and added to the network as a stub for full-pipeline profiling.'
+image: https://phare.io/img/open-graph.jpg
+description: Phare provides European uptime monitoring, incident management, and analytics solutions. Their platform offers real‑time website
+  and server uptime checks, customizable alerts, AI‑assisted incident handling, and privacy‑first analytics without cookies. Users can create
+  status pages, integrate with various services, and access detailed traffic insights, all tailored for European compliance and reliability.
 url: https://raw.githubusercontent.com/api-evangelist/phare/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:new-submission
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-27 (modular-v1; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-27'
 modified: '2026-09-27'
 tags:
 - Company
-apis: []
+- Monitoring
+- Incident Management
+- Analytics
+- European
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/phare-agentic-access.yml
+- type: Plans
+  url: plans/phare-plans-pricing.yml
+- type: Spectral
+  url: rules/phare-rules.yml
+- type: JSONLD
+  url: json-ld/phare-context.jsonld
+- type: Vocabulary
+  url: vocabulary/phare-vocabulary.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/phare-webhooks.yml
+- type: DataModel
+  url: data-model/phare-data-model.yml
+- type: ChangeLog
+  url: changelog/phare-changelog.yml
+- type: Security
+  url: https://phare.io/legal/vulnerability-disclosure
+- type: ErrorCatalog
+  url: errors/phare-problem-types.yml
+- type: Conformance
+  url: conformance/phare-conformance.yml
+- type: LLMsTxt
+  url: llms/phare-llms.txt
+- type: AgentCard
+  url: a2a/phare-a2a.yml
+- type: SecurityTxt
+  url: well-known/phare-security.txt
+- type: SecurityTxt
+  url: well-known/phare-pushover-security.txt
+- type: SecurityTxt
+  url: well-known/phare-app-security.txt
+- type: WellKnown
+  url: well-known/phare-well-known.yml
+- type: Hosts
+  url: hosts/phare-hosts.yml
+- type: Vendors
+  url: vendors/phare-vendors.yml
+- type: TermsOfService
+  url: https://phare.io/legal/terms-of-service
+- type: StatusPage
+  url: https://status.phare.io/
+- type: PrivacyPolicy
+  url: https://phare.io/legal/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/phare
+- type: ChangeLog
+  url: https://docs.phare.io/changelog/platform/2026
+- type: GettingStarted
+  url: https://docs.phare.io/getting-started
+- type: APIReference
+  url: https://docs.phare.io/llms.txt
+- type: Authentication
+  url: authentication/phare-authentication.yml
+- type: VulnerabilityDisclosure
+  url: security/phare-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/phare-domain-security.yml
 - type: Website
   url: https://phare.io/
+- type: DeveloperPortal
+  url: https://app.phare.io/login
+- type: Documentation
+  url: https://docs.phare.io/introduction
+- type: Pricing
+  url: https://phare.io/pricing
+- type: Blog
+  url: https://phare.io/blog/
+- type: SignUp
+  url: https://app.phare.io/register
+apis:
+- aid: phare:phare-alert-rules-api
+  name: Phare Alert Rules API
+  description: Alert Rules
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Alert Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-alert-rules-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-incidents-api
+  name: Phare Incidents API
+  description: Incidents
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Incidents
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-incidents-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-integrations-api
+  name: Phare Integrations API
+  description: Integrations
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-integrations-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-maintenance-windows-api
+  name: Phare Maintenance Windows API
+  description: Maintenance Windows
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Maintenance Windows
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-maintenance-windows-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-monitors-api
+  name: Phare Monitors API
+  description: Monitors
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Monitors
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-monitors-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-platform-api
+  name: Phare Platform API
+  description: Platform
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Platform
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-platform-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-projects-api
+  name: Phare Projects API
+  description: Projects
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-projects-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-reports-api
+  name: Phare Reports API
+  description: Reports
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-reports-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-status-pages-api
+  name: Phare Status Pages API
+  description: Status Pages
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Status Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-status-pages-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+- aid: phare:phare-users-api
+  name: Phare Users API
+  description: Users
+  humanURL: https://docs.phare.io/api-reference/introduction
+  baseURL: https://api.phare.io
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/phare-users-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-links-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-uptime-product-events-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-meta-schema.json
+  - type: JSONSchema
+    url: json-schema/phare-platform-app-outgoing-webhook-alert-rule-settings-schema.json
+  - type: JSONSchema
+    url: >-
+      json-schema/phare-platform-event-uptime-monitor-certificate-expiring-alert-rule-settings-schema.json
+x-enrichment:
+  date: '2026-09-27'
+  status: enriched
+  artifacts_added: 35
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/phare/main/json-schema/phare-uptime-product-events-schema.json",
+  "title": "Uptime.ProductEvents",
+  "x-generated": "2026-09-27",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/phare-openapi.json#/components/schemas/Uptime.ProductEvents",
+  "type": "string",
+  "enum": [
+    "uptime.monitor.created",
+    "uptime.monitor.deleted",
+    "uptime.monitor_certificate.discovered",
+    "uptime.monitor_certificate.expiring",
+    "uptime.incident.created",
+    "uptime.incident.propagated",
+    "uptime.incident.partially_recovered",
+    "uptime.incident.recovered",
+    "uptime.incident_comment.created",
+    "uptime.incident_update.published",
+    "uptime.maintenance_window.in_progress",
+    "uptime.maintenance_window.completed",
+    "uptime.maintenance_window.cancelled"
+  ]
+}

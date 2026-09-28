@@ -1,0 +1,97 @@
+openapi: 3.2.0
+info:
+  title: Phare Platform API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Platform
+  description: Platform
+paths:
+  /:
+    get:
+      tags:
+      - Platform
+      summary: Get API info
+      description: Get basic API information
+      operationId: getInfo
+      responses:
+        '200':
+          description: Success, information retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  title:
+                    description: API title
+                    type: string
+                    example: Phare
+                  version:
+                    description: API version
+                    type: string
+                    example: '1.0'
+                  support:
+                    description: Support email address
+                    type: string
+                    example: support@phare.io
+                  website:
+                    description: Platform website url
+                    type: string
+                    example: https://phare.io
+                  documentation:
+                    description: API documentation url
+                    type: string
+                    example: https://docs.phare.io/
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+components:
+  responses:
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports

@@ -1,0 +1,52 @@
+generated: '2026-09-27'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://phare.io/pricing
+sources:
+- https://phare.io/pricing
+- https://docs.phare.io/billing-quotas.md
+name: Phare pricing
+audience: business-product
+pricing_basis: per-seat
+plans:
+- name: Hobby
+  price_text: Free
+  description: Free plan for hobbyists, bedroom startups and indiehackers with unlimited features, 100 000 monitoring events, 10 AI incident summaries,
+    public status pages, unlimited custom domains with SSL, no SMS/voice alerts.
+  features:
+  - Unlimited features
+  - 100 000 monitoring events
+  - 10 AI incident summaries
+  - Public status pages
+  - Unlimited custom domains with SSL
+  limits:
+  - name: monitoring_events
+    limit_text: 100 000
+  - name: ai_generations
+    limit_text: '10'
+  - name: sms_voice_alerts
+    limit_text: '0'
+- name: Scale
+  price_text: 5€/mo
+  price: 5
+  description: Paid plan with 500 000 monitoring events, 100 AI incident summaries, public and private status pages, 20 SMS/voice alerts, plus
+    additional usage billed per unit.
+  features:
+  - Unlimited features
+  - Public and private status pages
+  - Unlimited custom domains with SSL
+  limits:
+  - name: monitoring_events
+    limit_text: 500 000
+  - name: monitoring_events_overage
+    limit_text: .00001€ per unit
+  - name: ai_generations
+    limit_text: '100'
+  - name: ai_generations_overage
+    limit_text: .01€ per unit
+  - name: sms_voice_alerts
+    limit_text: '20'
+  - name: sms_voice_alerts_overage
+    limit_text: .1€ per unit
+docs: https://phare.io/pricing
+note: 1 extracted row(s) were dropped because their quote was not on the page.

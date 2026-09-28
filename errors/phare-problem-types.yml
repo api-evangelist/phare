@@ -1,0 +1,48 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/phare-openapi.json
+format: custom
+envelope:
+  media_type: application/json
+  schema: null
+coverage:
+  operations: 48
+  statuses_declared: 5
+problems:
+- status: 401
+  title: Unauthorized
+  description: Error, access unauthorized
+  operations: 48
+  media_types:
+  - application/json
+  schema: null
+- status: 403
+  title: Forbidden
+  description: Error, access forbidden
+  operations: 48
+  media_types:
+  - application/json
+  schema: null
+- status: 404
+  title: Not Found
+  description: Error, resource not found
+  operations: 23
+  media_types:
+  - application/json
+  schema: null
+- status: 409
+  title: Conflict
+  description: Error, alert rule cannot be deleted
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 422
+  title: Unprocessable Content
+  description: Error, unprocessable entity
+  operations: 21
+  media_types:
+  - application/json
+  schema: null

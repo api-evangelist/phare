@@ -1,0 +1,169 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/phare-openapi.json
+vocabulary:
+  name: Phare Domain Vocabulary
+  description: 'Terms declared by Phare''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-09-28'
+  terms:
+  - term: Users
+    definition: Users
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Projects
+    definition: Projects
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Alert Rules
+    definition: Alert Rules
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Monitors
+    definition: Monitors
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Incidents
+    definition: Incidents
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Status Pages
+    definition: Status Pages
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Reports
+    definition: Reports
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Platform
+    definition: Platform
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Integrations
+    definition: Integrations
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: Maintenance Windows
+    definition: Maintenance Windows
+    tags:
+    - Resource Group
+    source: openapi/phare-openapi.json
+  - term: meta
+    definition: Meta data for pagination
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/meta
+  - term: links
+    definition: Links for pagination
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/links
+  - term: Ntfy
+    definition: 'Object declared by the contract with fields: priority.'
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/Platform.App.Ntfy.AlertRuleSettings
+  - term: Outgoing Webhooks
+    definition: 'Object declared by the contract with fields: schema.'
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/Platform.App.OutgoingWebhook.AlertRuleSettings
+  - term: Pushover
+    definition: 'Object declared by the contract with fields: priority, retry, expire.'
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/Platform.App.Pushover.AlertRuleSettings
+  - term: Uptime incident
+    definition: 'Object declared by the contract with fields: type.'
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/Platform.Event.UptimeIncident.AlertRuleSettings
+  - term: Uptime certificate expiring
+    definition: 'Object declared by the contract with fields: days_before_expiry.'
+    tags:
+    - Object
+    source: openapi/phare-openapi.json#/components/schemas/Platform.Event.UptimeMonitorCertificateExpiring.AlertRuleSettings
+  - term: Uptime.ProductEvents
+    definition: 'Enumeration declared by the contract with values: uptime.monitor.created, uptime.monitor.deleted, uptime.monitor_certificate.discovered,
+      uptime.monitor_certificate.expiring, uptime.incident.created, uptime.incident.propagated, uptime.incident.partially_recovered, uptime.incident.recovered,
+      uptime.incident_comment.created, uptime.incident_update.published, uptime.maintenance_window.in_progress, uptime.maintenance_window.completed.
+      (1 more)'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.ProductEvents
+  - term: Phare.User.UserRoleEnum
+    definition: 'Enumeration declared by the contract with values: member, admin.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Phare.User.UserRoleEnum
+  - term: Uptime.Incident.ImpactEnum
+    definition: 'Enumeration declared by the contract with values: unknown, operational, maintenance, degraded_performance, partial_outage, major_outage.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Incident.ImpactEnum
+  - term: Uptime.Incident.StateEnum
+    definition: 'Enumeration declared by the contract with values: unknown, investigating, identified, monitoring, resolved.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Incident.StateEnum
+  - term: Uptime.Incident.StatusEnum
+    definition: 'Enumeration declared by the contract with values: ongoing, recovering, recovered.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Incident.StatusEnum
+  - term: Uptime.Incident.TypeEnum
+    definition: 'Enumeration declared by the contract with values: monitor, manual.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Incident.TypeEnum
+  - term: Uptime.MaintenanceWindow.MonitoringModeEnum
+    definition: 'Enumeration declared by the contract with values: pause, mute, normal.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.MaintenanceWindow.MonitoringModeEnum
+  - term: Uptime.MaintenanceWindow.StateEnum
+    definition: 'Enumeration declared by the contract with values: scheduled, in_progress, completed, cancelled.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.MaintenanceWindow.StateEnum
+  - term: Uptime.Monitor.ConnectionEnum
+    definition: 'Enumeration declared by the contract with values: plain, tls.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Monitor.ConnectionEnum
+  - term: Uptime.Monitor.ProtocolEnum
+    definition: 'Enumeration declared by the contract with values: http, tcp.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Monitor.ProtocolEnum
+  - term: Uptime.Monitor.RegionEnum
+    definition: 'Enumeration declared by the contract with values: as-jpn-hnd, as-sgp-sin, as-tha-bkk, eu-deu-fra, eu-fra-cdg, eu-gbr-lhr, eu-swe-arn,
+      ng-nld-ams, na-mex-mex, na-usa-iad, na-usa-sea, oc-aus-syd. (1 more)'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Monitor.RegionEnum
+  - term: Uptime.Monitor.StatusEnum
+    definition: 'Enumeration declared by the contract with values: fetching, online, offline, partial, paused.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.Monitor.StatusEnum
+  - term: Uptime.StatusPage.SubscriptionChannelEnum
+    definition: 'Enumeration declared by the contract with values: rss, atom, slack.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum
+  - term: Platform.App.AppEnum
+    definition: 'Enumeration declared by the contract with values: sms, discord, email, ilert, ntfy, outgoing_webhook, pushover, slack, telegram.'
+    tags:
+    - Enumeration
+    source: openapi/phare-openapi.json#/components/schemas/Platform.App.AppEnum

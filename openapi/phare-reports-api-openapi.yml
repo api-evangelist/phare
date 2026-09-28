@@ -1,0 +1,346 @@
+openapi: 3.2.0
+info:
+  title: Phare Reports API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Reports
+  description: Reports
+paths:
+  /uptime/reports:
+    get:
+      tags:
+      - Reports
+      summary: Get report
+      description: Get aggregated uptime statistics for the selected time window
+      operationId: getUptimeReport
+      parameters:
+      - name: from
+        in: query
+        description: Start of the reporting window
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-04-01T00:00:00Z'
+      - name: to
+        in: query
+        description: End of the reporting window
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-04-30T23:59:59Z'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, report retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  downtime:
+                    description: Total downtime across all monitors in seconds
+                    type: integer
+                    example: 2940
+                  availability:
+                    description: Mean monitor availability across the selected range, as a percentage
+                    type: number
+                    format: float
+                    example: 99.9634
+                  min_availability:
+                    description: Lowest monitor availability in the selected range, as a percentage
+                    type: number
+                    format: float
+                    example: 99.9125
+                  max_availability:
+                    description: Highest monitor availability in the selected range, as a percentage
+                    type: number
+                    format: float
+                    example: 100
+                  mttr:
+                    description: Mean time to recovery (MTTR) average for all monitors, in seconds
+                    type:
+                    - number
+                    - 'null'
+                    format: float
+                    example: 735
+                  mtbf:
+                    description: Mean time between failures (MTBF) average for all monitors, in seconds
+                    type:
+                    - number
+                    - 'null'
+                    format: float
+                    example: 43200
+                  highest_incident_impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  report_start_at:
+                    description: Effective start of the generated report window
+                    type: string
+                    format: date-time
+                    example: '2026-04-01T00:00:00Z'
+                  report_end_at:
+                    description: Effective end of the generated report window
+                    type: string
+                    format: date-time
+                    example: '2026-04-30T23:59:59Z'
+                  monitors:
+                    description: Per-monitor statistics for all monitors included in the report
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          description: Monitor ID
+                          type: integer
+                          example: 12
+                        name:
+                          description: Monitor name
+                          type: string
+                          example: Website
+                        incident_count:
+                          description: Number of incidents affecting this monitor in the selected range
+                          type: integer
+                          example: 2
+                        downtime:
+                          description: Total downtime for this monitor in seconds
+                          type: integer
+                          example: 1500
+                        availability:
+                          description: Availability for this monitor in the selected range, as a percentage
+                          type: number
+                          format: float
+                          example: 99.944
+                        mttr:
+                          description: Mean time to recovery (MTTR) for this monitor, in seconds
+                          type:
+                          - integer
+                          - 'null'
+                          example: 750
+                        mtbf:
+                          description: Mean time between failures (MTBF) for this monitor, in seconds
+                          type:
+                          - integer
+                          - 'null'
+                          example: 43200
+                        highest_incident_impact:
+                          $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                        incidents:
+                          description: Incidents that affected this monitor in the selected range
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                              project_id:
+                                description: Parent project ID
+                                type: integer
+                                example: 1
+                              type:
+                                $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                              slug:
+                                description: Incident unique slug name
+                                type: string
+                                example: APP-123
+                              impact:
+                                $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                              state:
+                                $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                              status:
+                                $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                              title:
+                                description: Incident title
+                                type: string
+                                example: Service is not working as expected
+                                maximum: 250
+                                minimum: 1
+                              description:
+                                description: Description of the error that caused the incident
+                                type: string
+                                example: 'The server answered with an unexpected status code: 503.'
+                                maximum: 2000
+                                minimum: 1
+                              exclude_from_downtime:
+                                description: Flag to exclude the incident from downtime calculations
+                                type: boolean
+                                example: false
+                              incident_at:
+                                description: Date of incident confirmation
+                                type:
+                                - string
+                                - 'null'
+                                format: date-time
+                              recovery_at:
+                                description: Date of incident recovery
+                                type:
+                                - string
+                                - 'null'
+                                format: date-time
+                              monitors:
+                                description: List of monitors linked to the incident
+                                type: array
+                                items:
+                                  type: integer
+                                example:
+                                - 1
+                                - 2
+                                - 3
+                                maxItems: 100
+                                minItems: 1
+                              created_at:
+                                description: Date of creation for the entity
+                                type: string
+                                format: date-time
+                              updated_at:
+                                description: Date of last update for the entity
+                                type: string
+                                format: date-time
+                            required:
+                            - impact
+                            - title
+                            - exclude_from_downtime
+                      type: object
+                type: object
+        '422':
+          $ref: '#/components/responses/422'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+components:
+  parameters:
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+  schemas:
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
+    Uptime.Incident.TypeEnum:
+      type: string
+      enum:
+      - monitor
+      - manual
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+  responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports

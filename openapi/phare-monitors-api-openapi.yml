@@ -1,0 +1,2297 @@
+openapi: 3.2.0
+info:
+  title: Phare Monitors API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Monitors
+  description: Monitors
+paths:
+  /uptime/monitors:
+    get:
+      tags:
+      - Monitors
+      summary: List monitors
+      description: Get a paginated list of monitors
+      operationId: getUptimeMonitors
+      responses:
+        '200':
+          description: Success, monitors retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: Monitor ID
+                          type: integer
+                          example: 1
+                        project_id:
+                          description: Parent project ID
+                          type: integer
+                          example: 1
+                        status:
+                          $ref: '#/components/schemas/Uptime.Monitor.StatusEnum'
+                        paused:
+                          description: Whether the monitor is currently paused
+                          type: boolean
+                          example: true
+                        response_time:
+                          description: Rolling average response time of the last 10 requests, in milliseconds
+                          type:
+                          - integer
+                          - 'null'
+                          example: 123
+                        name:
+                          description: Monitor name
+                          type: string
+                          example: Website
+                          maximum: 45
+                          minimum: 2
+                        protocol:
+                          $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                        request:
+                          description: Monitoring request, depends of the chosen protocol
+                          type: object
+                          oneOf:
+                          - title: HTTP protocol
+                            required:
+                            - method
+                            - url
+                            properties:
+                              method:
+                                description: HTTP request method
+                                type: string
+                                enum:
+                                - HEAD
+                                - GET
+                                - POST
+                                - PUT
+                                - PATCH
+                                - OPTIONS
+                              url:
+                                description: HTTP request url
+                                type: string
+                                example: https://docs.phare.io/introduction
+                                maximum: 255
+                              tls_skip_verify:
+                                description: Skip SSL verification
+                                type:
+                                - boolean
+                                - 'null'
+                                example: false
+                                default: false
+                              body:
+                                description: HTTP request body for POST, PUT and PATCH requests
+                                type:
+                                - string
+                                - 'null'
+                                example: Hello, World!
+                                maximum: 500
+                              follow_redirects:
+                                description: Follow redirects
+                                type:
+                                - boolean
+                                - 'null'
+                                example: true
+                                default: true
+                              user_agent_secret:
+                                description: A secret value to be used in the User-Agent header for authenticating the request
+                                type:
+                                - string
+                                - 'null'
+                                example: definitely-not-a-bot
+                              headers:
+                                description: Additional HTTP headers to add to the request
+                                type:
+                                - array
+                                - 'null'
+                                items:
+                                  required:
+                                  - name
+                                  - value
+                                  properties:
+                                    name:
+                                      description: Header name
+                                      type: string
+                                      example: X-Phare-Says
+                                      maximum: 50
+                                    value:
+                                      description: Header value
+                                      type: string
+                                      example: Hello world!
+                                      maximum: 1024
+                                  type: object
+                                maxItems: 10
+                            type: object
+                          - title: TCP protocol
+                            required:
+                            - host
+                            - port
+                            - connection
+                            properties:
+                              host:
+                                description: TCP request hostname or IP address
+                                type: string
+                                example: 8.8.8.8
+                              port:
+                                description: TCP request port
+                                type: string
+                                example: '80'
+                              connection:
+                                $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                              tls_skip_verify:
+                                description: Skip TLS verification
+                                type:
+                                - boolean
+                                - 'null'
+                                example: false
+                                default: false
+                            type: object
+                        interval:
+                          description: Monitoring interval in seconds
+                          type: integer
+                          example: 60
+                          default: 60
+                          enum:
+                          - 30
+                          - 60
+                          - 120
+                          - 180
+                          - 300
+                          - 600
+                          - 900
+                          - 1800
+                          - 3600
+                        timeout:
+                          description: Monitoring timeout in milliseconds
+                          type: integer
+                          example: 20000
+                          default: 20000
+                          enum:
+                          - 1000
+                          - 2000
+                          - 3000
+                          - 4000
+                          - 5000
+                          - 6000
+                          - 7000
+                          - 8000
+                          - 9000
+                          - 10000
+                          - 15000
+                          - 20000
+                          - 25000
+                          - 30000
+                        success_assertions:
+                          description: List of assertions that must be true for the check to be considered successful
+                          type: array
+                          items:
+                            oneOf:
+                            - title: Status code assertion
+                              required:
+                              - type
+                              - operator
+                              - value
+                              properties:
+                                type:
+                                  description: Type of assertion
+                                  type: string
+                                  enum:
+                                  - status_code
+                                operator:
+                                  description: Operator to use for the assertion
+                                  type: string
+                                  example: in
+                                  enum:
+                                  - in
+                                  - not_in
+                                value:
+                                  description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                                  type: string
+                                  example: 2xx,30x,418
+                              type: object
+                            - title: Response header assertion
+                              required:
+                              - type
+                              - selector
+                              - operator
+                              - value
+                              properties:
+                                type:
+                                  description: Type of assertion
+                                  type: string
+                                  enum:
+                                  - response_header
+                                selector:
+                                  description: The name of the header to assert
+                                  type: string
+                                  example: Content-Type
+                                operator:
+                                  description: Operator to use for the assertion
+                                  type: string
+                                  example: equals
+                                  enum:
+                                  - equals
+                                  - not_equals
+                                value:
+                                  description: The value of the header to assert
+                                  type: string
+                                  example: application/json
+                              type: object
+                            - title: Response body assertion
+                              required:
+                              - type
+                              - operator
+                              - value
+                              properties:
+                                type:
+                                  description: Type of assertion
+                                  type: string
+                                  enum:
+                                  - response_body
+                                operator:
+                                  description: Operator to use for the assertion
+                                  type: string
+                                  example: contains
+                                  enum:
+                                  - contains
+                                  - not_contains
+                                value:
+                                  description: A word or sentence to check in the response body
+                                  type: string
+                                  example: Hello, World!
+                              type: object
+                        incident_confirmations:
+                          description: Number of uninterrupted failed checks required to create an incident
+                          type: integer
+                          example: 1
+                          default: 3
+                          enum:
+                          - 1
+                          - 2
+                          - 3
+                          - 4
+                          - 5
+                        recovery_confirmations:
+                          description: Number of uninterrupted successful checks required to resolve an incident
+                          type: integer
+                          example: 1
+                          default: 3
+                          enum:
+                          - 1
+                          - 2
+                          - 3
+                          - 4
+                          - 5
+                        region_threshold:
+                          description: Number of regions that must fail before an incident is confirmed
+                          type: integer
+                          example: 1
+                          default: 1
+                          maximum: 10
+                          minimum: 1
+                        regions:
+                          description: List of regions where monitoring checks are performed
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                          maxItems: 6
+                          minItems: 1
+                        last_checked_at:
+                          description: Date of the last performed check with a 30s accuracy
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - name
+                      - protocol
+                      - request
+                      - regions
+                  meta:
+                    $ref: '#/components/schemas/meta'
+                  links:
+                    $ref: '#/components/schemas/links'
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+    post:
+      tags:
+      - Monitors
+      summary: Create a monitor
+      operationId: createUptimeMonitor
+      requestBody:
+        description: Monitor request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Monitor name
+                  type: string
+                  example: Website
+                  maximum: 45
+                  minimum: 2
+                protocol:
+                  $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                request:
+                  description: Monitoring request, depends of the chosen protocol
+                  type: object
+                  oneOf:
+                  - title: HTTP protocol
+                    required:
+                    - method
+                    - url
+                    properties:
+                      method:
+                        description: HTTP request method
+                        type: string
+                        enum:
+                        - HEAD
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - OPTIONS
+                      url:
+                        description: HTTP request url
+                        type: string
+                        example: https://docs.phare.io/introduction
+                        maximum: 255
+                      tls_skip_verify:
+                        description: Skip SSL verification
+                        type:
+                        - boolean
+                        - 'null'
+                        example: false
+                        default: false
+                      body:
+                        description: HTTP request body for POST, PUT and PATCH requests
+                        type:
+                        - string
+                        - 'null'
+                        example: Hello, World!
+                        maximum: 500
+                      follow_redirects:
+                        description: Follow redirects
+                        type:
+                        - boolean
+                        - 'null'
+                        example: true
+                        default: true
+                      user_agent_secret:
+                        description: A secret value to be used in the User-Agent header for authenticating the request
+                        type:
+                        - string
+                        - 'null'
+                        example: definitely-not-a-bot
+                      headers:
+                        description: Additional HTTP headers to add to the request
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          required:
+                          - name
+                          - value
+                          properties:
+                            name:
+                              description: Header name
+                              type: string
+                              example: X-Phare-Says
+                              maximum: 50
+                            value:
+                              description: Header value
+                              type: string
+                              example: Hello world!
+                              maximum: 1024
+                          type: object
+                        maxItems: 10
+                    type: object
+                  - title: TCP protocol
+                    required:
+                    - host
+                    - port
+                    - connection
+                    properties:
+                      host:
+                        description: TCP request hostname or IP address
+                        type: string
+                        example: 8.8.8.8
+                      port:
+                        description: TCP request port
+                        type: string
+                        example: '80'
+                      connection:
+                        $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                      tls_skip_verify:
+                        description: Skip TLS verification
+                        type:
+                        - boolean
+                        - 'null'
+                        example: false
+                        default: false
+                    type: object
+                interval:
+                  description: Monitoring interval in seconds
+                  type: integer
+                  example: 60
+                  default: 60
+                  enum:
+                  - 30
+                  - 60
+                  - 120
+                  - 180
+                  - 300
+                  - 600
+                  - 900
+                  - 1800
+                  - 3600
+                timeout:
+                  description: Monitoring timeout in milliseconds
+                  type: integer
+                  example: 20000
+                  default: 20000
+                  enum:
+                  - 1000
+                  - 2000
+                  - 3000
+                  - 4000
+                  - 5000
+                  - 6000
+                  - 7000
+                  - 8000
+                  - 9000
+                  - 10000
+                  - 15000
+                  - 20000
+                  - 25000
+                  - 30000
+                success_assertions:
+                  description: List of assertions that must be true for the check to be considered successful
+                  type: array
+                  items:
+                    oneOf:
+                    - title: Status code assertion
+                      required:
+                      - type
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - status_code
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: in
+                          enum:
+                          - in
+                          - not_in
+                        value:
+                          description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                          type: string
+                          example: 2xx,30x,418
+                      type: object
+                    - title: Response header assertion
+                      required:
+                      - type
+                      - selector
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - response_header
+                        selector:
+                          description: The name of the header to assert
+                          type: string
+                          example: Content-Type
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: equals
+                          enum:
+                          - equals
+                          - not_equals
+                        value:
+                          description: The value of the header to assert
+                          type: string
+                          example: application/json
+                      type: object
+                    - title: Response body assertion
+                      required:
+                      - type
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - response_body
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: contains
+                          enum:
+                          - contains
+                          - not_contains
+                        value:
+                          description: A word or sentence to check in the response body
+                          type: string
+                          example: Hello, World!
+                      type: object
+                incident_confirmations:
+                  description: Number of uninterrupted failed checks required to create an incident
+                  type: integer
+                  example: 1
+                  default: 3
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                recovery_confirmations:
+                  description: Number of uninterrupted successful checks required to resolve an incident
+                  type: integer
+                  example: 1
+                  default: 3
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                region_threshold:
+                  description: Number of regions that must fail before an incident is confirmed
+                  type: integer
+                  example: 1
+                  default: 1
+                  maximum: 10
+                  minimum: 1
+                regions:
+                  description: List of regions where monitoring checks are performed
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                  maxItems: 6
+                  minItems: 1
+              required:
+              - name
+              - protocol
+              - request
+              - regions
+      responses:
+        '201':
+          description: Success, monitor created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Monitor ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  status:
+                    $ref: '#/components/schemas/Uptime.Monitor.StatusEnum'
+                  paused:
+                    description: Whether the monitor is currently paused
+                    type: boolean
+                    example: true
+                  response_time:
+                    description: Rolling average response time of the last 10 requests, in milliseconds
+                    type:
+                    - integer
+                    - 'null'
+                    example: 123
+                  name:
+                    description: Monitor name
+                    type: string
+                    example: Website
+                    maximum: 45
+                    minimum: 2
+                  protocol:
+                    $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                  request:
+                    description: Monitoring request, depends of the chosen protocol
+                    type: object
+                    oneOf:
+                    - title: HTTP protocol
+                      required:
+                      - method
+                      - url
+                      properties:
+                        method:
+                          description: HTTP request method
+                          type: string
+                          enum:
+                          - HEAD
+                          - GET
+                          - POST
+                          - PUT
+                          - PATCH
+                          - OPTIONS
+                        url:
+                          description: HTTP request url
+                          type: string
+                          example: https://docs.phare.io/introduction
+                          maximum: 255
+                        tls_skip_verify:
+                          description: Skip SSL verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                        body:
+                          description: HTTP request body for POST, PUT and PATCH requests
+                          type:
+                          - string
+                          - 'null'
+                          example: Hello, World!
+                          maximum: 500
+                        follow_redirects:
+                          description: Follow redirects
+                          type:
+                          - boolean
+                          - 'null'
+                          example: true
+                          default: true
+                        user_agent_secret:
+                          description: A secret value to be used in the User-Agent header for authenticating the request
+                          type:
+                          - string
+                          - 'null'
+                          example: definitely-not-a-bot
+                        headers:
+                          description: Additional HTTP headers to add to the request
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            required:
+                            - name
+                            - value
+                            properties:
+                              name:
+                                description: Header name
+                                type: string
+                                example: X-Phare-Says
+                                maximum: 50
+                              value:
+                                description: Header value
+                                type: string
+                                example: Hello world!
+                                maximum: 1024
+                            type: object
+                          maxItems: 10
+                      type: object
+                    - title: TCP protocol
+                      required:
+                      - host
+                      - port
+                      - connection
+                      properties:
+                        host:
+                          description: TCP request hostname or IP address
+                          type: string
+                          example: 8.8.8.8
+                        port:
+                          description: TCP request port
+                          type: string
+                          example: '80'
+                        connection:
+                          $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                        tls_skip_verify:
+                          description: Skip TLS verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                      type: object
+                  interval:
+                    description: Monitoring interval in seconds
+                    type: integer
+                    example: 60
+                    default: 60
+                    enum:
+                    - 30
+                    - 60
+                    - 120
+                    - 180
+                    - 300
+                    - 600
+                    - 900
+                    - 1800
+                    - 3600
+                  timeout:
+                    description: Monitoring timeout in milliseconds
+                    type: integer
+                    example: 20000
+                    default: 20000
+                    enum:
+                    - 1000
+                    - 2000
+                    - 3000
+                    - 4000
+                    - 5000
+                    - 6000
+                    - 7000
+                    - 8000
+                    - 9000
+                    - 10000
+                    - 15000
+                    - 20000
+                    - 25000
+                    - 30000
+                  success_assertions:
+                    description: List of assertions that must be true for the check to be considered successful
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Status code assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - status_code
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: in
+                            enum:
+                            - in
+                            - not_in
+                          value:
+                            description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                            type: string
+                            example: 2xx,30x,418
+                        type: object
+                      - title: Response header assertion
+                        required:
+                        - type
+                        - selector
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_header
+                          selector:
+                            description: The name of the header to assert
+                            type: string
+                            example: Content-Type
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: equals
+                            enum:
+                            - equals
+                            - not_equals
+                          value:
+                            description: The value of the header to assert
+                            type: string
+                            example: application/json
+                        type: object
+                      - title: Response body assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_body
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: contains
+                            enum:
+                            - contains
+                            - not_contains
+                          value:
+                            description: A word or sentence to check in the response body
+                            type: string
+                            example: Hello, World!
+                        type: object
+                  incident_confirmations:
+                    description: Number of uninterrupted failed checks required to create an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  recovery_confirmations:
+                    description: Number of uninterrupted successful checks required to resolve an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  region_threshold:
+                    description: Number of regions that must fail before an incident is confirmed
+                    type: integer
+                    example: 1
+                    default: 1
+                    maximum: 10
+                    minimum: 1
+                  regions:
+                    description: List of regions where monitoring checks are performed
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                    maxItems: 6
+                    minItems: 1
+                  last_checked_at:
+                    description: Date of the last performed check with a 30s accuracy
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - protocol
+                - request
+                - regions
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+      parameters:
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+  /uptime/monitors/{monitorId}:
+    get:
+      tags:
+      - Monitors
+      summary: Get a monitor
+      description: Get a monitor by ID
+      operationId: getUptimeMonitor
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to show
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, monitor retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Monitor ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  status:
+                    $ref: '#/components/schemas/Uptime.Monitor.StatusEnum'
+                  paused:
+                    description: Whether the monitor is currently paused
+                    type: boolean
+                    example: true
+                  response_time:
+                    description: Rolling average response time of the last 10 requests, in milliseconds
+                    type:
+                    - integer
+                    - 'null'
+                    example: 123
+                  name:
+                    description: Monitor name
+                    type: string
+                    example: Website
+                    maximum: 45
+                    minimum: 2
+                  protocol:
+                    $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                  request:
+                    description: Monitoring request, depends of the chosen protocol
+                    type: object
+                    oneOf:
+                    - title: HTTP protocol
+                      required:
+                      - method
+                      - url
+                      properties:
+                        method:
+                          description: HTTP request method
+                          type: string
+                          enum:
+                          - HEAD
+                          - GET
+                          - POST
+                          - PUT
+                          - PATCH
+                          - OPTIONS
+                        url:
+                          description: HTTP request url
+                          type: string
+                          example: https://docs.phare.io/introduction
+                          maximum: 255
+                        tls_skip_verify:
+                          description: Skip SSL verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                        body:
+                          description: HTTP request body for POST, PUT and PATCH requests
+                          type:
+                          - string
+                          - 'null'
+                          example: Hello, World!
+                          maximum: 500
+                        follow_redirects:
+                          description: Follow redirects
+                          type:
+                          - boolean
+                          - 'null'
+                          example: true
+                          default: true
+                        user_agent_secret:
+                          description: A secret value to be used in the User-Agent header for authenticating the request
+                          type:
+                          - string
+                          - 'null'
+                          example: definitely-not-a-bot
+                        headers:
+                          description: Additional HTTP headers to add to the request
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            required:
+                            - name
+                            - value
+                            properties:
+                              name:
+                                description: Header name
+                                type: string
+                                example: X-Phare-Says
+                                maximum: 50
+                              value:
+                                description: Header value
+                                type: string
+                                example: Hello world!
+                                maximum: 1024
+                            type: object
+                          maxItems: 10
+                      type: object
+                    - title: TCP protocol
+                      required:
+                      - host
+                      - port
+                      - connection
+                      properties:
+                        host:
+                          description: TCP request hostname or IP address
+                          type: string
+                          example: 8.8.8.8
+                        port:
+                          description: TCP request port
+                          type: string
+                          example: '80'
+                        connection:
+                          $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                        tls_skip_verify:
+                          description: Skip TLS verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                      type: object
+                  interval:
+                    description: Monitoring interval in seconds
+                    type: integer
+                    example: 60
+                    default: 60
+                    enum:
+                    - 30
+                    - 60
+                    - 120
+                    - 180
+                    - 300
+                    - 600
+                    - 900
+                    - 1800
+                    - 3600
+                  timeout:
+                    description: Monitoring timeout in milliseconds
+                    type: integer
+                    example: 20000
+                    default: 20000
+                    enum:
+                    - 1000
+                    - 2000
+                    - 3000
+                    - 4000
+                    - 5000
+                    - 6000
+                    - 7000
+                    - 8000
+                    - 9000
+                    - 10000
+                    - 15000
+                    - 20000
+                    - 25000
+                    - 30000
+                  success_assertions:
+                    description: List of assertions that must be true for the check to be considered successful
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Status code assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - status_code
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: in
+                            enum:
+                            - in
+                            - not_in
+                          value:
+                            description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                            type: string
+                            example: 2xx,30x,418
+                        type: object
+                      - title: Response header assertion
+                        required:
+                        - type
+                        - selector
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_header
+                          selector:
+                            description: The name of the header to assert
+                            type: string
+                            example: Content-Type
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: equals
+                            enum:
+                            - equals
+                            - not_equals
+                          value:
+                            description: The value of the header to assert
+                            type: string
+                            example: application/json
+                        type: object
+                      - title: Response body assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_body
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: contains
+                            enum:
+                            - contains
+                            - not_contains
+                          value:
+                            description: A word or sentence to check in the response body
+                            type: string
+                            example: Hello, World!
+                        type: object
+                  incident_confirmations:
+                    description: Number of uninterrupted failed checks required to create an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  recovery_confirmations:
+                    description: Number of uninterrupted successful checks required to resolve an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  region_threshold:
+                    description: Number of regions that must fail before an incident is confirmed
+                    type: integer
+                    example: 1
+                    default: 1
+                    maximum: 10
+                    minimum: 1
+                  regions:
+                    description: List of regions where monitoring checks are performed
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                    maxItems: 6
+                    minItems: 1
+                  last_checked_at:
+                    description: Date of the last performed check with a 30s accuracy
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - protocol
+                - request
+                - regions
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+      - Monitors
+      summary: Update a monitor
+      description: Update a monitor by ID
+      operationId: updateUptimeMonitor
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to update
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      requestBody:
+        description: Monitor request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Monitor name
+                  type: string
+                  example: Website
+                  maximum: 45
+                  minimum: 2
+                protocol:
+                  $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                request:
+                  description: Monitoring request, depends of the chosen protocol
+                  type: object
+                  oneOf:
+                  - title: HTTP protocol
+                    required:
+                    - method
+                    - url
+                    properties:
+                      method:
+                        description: HTTP request method
+                        type: string
+                        enum:
+                        - HEAD
+                        - GET
+                        - POST
+                        - PUT
+                        - PATCH
+                        - OPTIONS
+                      url:
+                        description: HTTP request url
+                        type: string
+                        example: https://docs.phare.io/introduction
+                        maximum: 255
+                      tls_skip_verify:
+                        description: Skip SSL verification
+                        type:
+                        - boolean
+                        - 'null'
+                        example: false
+                        default: false
+                      body:
+                        description: HTTP request body for POST, PUT and PATCH requests
+                        type:
+                        - string
+                        - 'null'
+                        example: Hello, World!
+                        maximum: 500
+                      follow_redirects:
+                        description: Follow redirects
+                        type:
+                        - boolean
+                        - 'null'
+                        example: true
+                        default: true
+                      user_agent_secret:
+                        description: A secret value to be used in the User-Agent header for authenticating the request
+                        type:
+                        - string
+                        - 'null'
+                        example: definitely-not-a-bot
+                      headers:
+                        description: Additional HTTP headers to add to the request
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          required:
+                          - name
+                          - value
+                          properties:
+                            name:
+                              description: Header name
+                              type: string
+                              example: X-Phare-Says
+                              maximum: 50
+                            value:
+                              description: Header value
+                              type: string
+                              example: Hello world!
+                              maximum: 1024
+                          type: object
+                        maxItems: 10
+                    type: object
+                  - title: TCP protocol
+                    required:
+                    - host
+                    - port
+                    - connection
+                    properties:
+                      host:
+                        description: TCP request hostname or IP address
+                        type: string
+                        example: 8.8.8.8
+                      port:
+                        description: TCP request port
+                        type: string
+                        example: '80'
+                      connection:
+                        $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                      tls_skip_verify:
+                        description: Skip TLS verification
+                        type:
+                        - boolean
+                        - 'null'
+                        example: false
+                        default: false
+                    type: object
+                interval:
+                  description: Monitoring interval in seconds
+                  type: integer
+                  example: 60
+                  default: 60
+                  enum:
+                  - 30
+                  - 60
+                  - 120
+                  - 180
+                  - 300
+                  - 600
+                  - 900
+                  - 1800
+                  - 3600
+                timeout:
+                  description: Monitoring timeout in milliseconds
+                  type: integer
+                  example: 20000
+                  default: 20000
+                  enum:
+                  - 1000
+                  - 2000
+                  - 3000
+                  - 4000
+                  - 5000
+                  - 6000
+                  - 7000
+                  - 8000
+                  - 9000
+                  - 10000
+                  - 15000
+                  - 20000
+                  - 25000
+                  - 30000
+                success_assertions:
+                  description: List of assertions that must be true for the check to be considered successful
+                  type: array
+                  items:
+                    oneOf:
+                    - title: Status code assertion
+                      required:
+                      - type
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - status_code
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: in
+                          enum:
+                          - in
+                          - not_in
+                        value:
+                          description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                          type: string
+                          example: 2xx,30x,418
+                      type: object
+                    - title: Response header assertion
+                      required:
+                      - type
+                      - selector
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - response_header
+                        selector:
+                          description: The name of the header to assert
+                          type: string
+                          example: Content-Type
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: equals
+                          enum:
+                          - equals
+                          - not_equals
+                        value:
+                          description: The value of the header to assert
+                          type: string
+                          example: application/json
+                      type: object
+                    - title: Response body assertion
+                      required:
+                      - type
+                      - operator
+                      - value
+                      properties:
+                        type:
+                          description: Type of assertion
+                          type: string
+                          enum:
+                          - response_body
+                        operator:
+                          description: Operator to use for the assertion
+                          type: string
+                          example: contains
+                          enum:
+                          - contains
+                          - not_contains
+                        value:
+                          description: A word or sentence to check in the response body
+                          type: string
+                          example: Hello, World!
+                      type: object
+                incident_confirmations:
+                  description: Number of uninterrupted failed checks required to create an incident
+                  type: integer
+                  example: 1
+                  default: 3
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                recovery_confirmations:
+                  description: Number of uninterrupted successful checks required to resolve an incident
+                  type: integer
+                  example: 1
+                  default: 3
+                  enum:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                region_threshold:
+                  description: Number of regions that must fail before an incident is confirmed
+                  type: integer
+                  example: 1
+                  default: 1
+                  maximum: 10
+                  minimum: 1
+                regions:
+                  description: List of regions where monitoring checks are performed
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                  maxItems: 6
+                  minItems: 1
+      responses:
+        '200':
+          description: Success, monitor updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Monitor ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  status:
+                    $ref: '#/components/schemas/Uptime.Monitor.StatusEnum'
+                  paused:
+                    description: Whether the monitor is currently paused
+                    type: boolean
+                    example: true
+                  response_time:
+                    description: Rolling average response time of the last 10 requests, in milliseconds
+                    type:
+                    - integer
+                    - 'null'
+                    example: 123
+                  name:
+                    description: Monitor name
+                    type: string
+                    example: Website
+                    maximum: 45
+                    minimum: 2
+                  protocol:
+                    $ref: '#/components/schemas/Uptime.Monitor.ProtocolEnum'
+                  request:
+                    description: Monitoring request, depends of the chosen protocol
+                    type: object
+                    oneOf:
+                    - title: HTTP protocol
+                      required:
+                      - method
+                      - url
+                      properties:
+                        method:
+                          description: HTTP request method
+                          type: string
+                          enum:
+                          - HEAD
+                          - GET
+                          - POST
+                          - PUT
+                          - PATCH
+                          - OPTIONS
+                        url:
+                          description: HTTP request url
+                          type: string
+                          example: https://docs.phare.io/introduction
+                          maximum: 255
+                        tls_skip_verify:
+                          description: Skip SSL verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                        body:
+                          description: HTTP request body for POST, PUT and PATCH requests
+                          type:
+                          - string
+                          - 'null'
+                          example: Hello, World!
+                          maximum: 500
+                        follow_redirects:
+                          description: Follow redirects
+                          type:
+                          - boolean
+                          - 'null'
+                          example: true
+                          default: true
+                        user_agent_secret:
+                          description: A secret value to be used in the User-Agent header for authenticating the request
+                          type:
+                          - string
+                          - 'null'
+                          example: definitely-not-a-bot
+                        headers:
+                          description: Additional HTTP headers to add to the request
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            required:
+                            - name
+                            - value
+                            properties:
+                              name:
+                                description: Header name
+                                type: string
+                                example: X-Phare-Says
+                                maximum: 50
+                              value:
+                                description: Header value
+                                type: string
+                                example: Hello world!
+                                maximum: 1024
+                            type: object
+                          maxItems: 10
+                      type: object
+                    - title: TCP protocol
+                      required:
+                      - host
+                      - port
+                      - connection
+                      properties:
+                        host:
+                          description: TCP request hostname or IP address
+                          type: string
+                          example: 8.8.8.8
+                        port:
+                          description: TCP request port
+                          type: string
+                          example: '80'
+                        connection:
+                          $ref: '#/components/schemas/Uptime.Monitor.ConnectionEnum'
+                        tls_skip_verify:
+                          description: Skip TLS verification
+                          type:
+                          - boolean
+                          - 'null'
+                          example: false
+                          default: false
+                      type: object
+                  interval:
+                    description: Monitoring interval in seconds
+                    type: integer
+                    example: 60
+                    default: 60
+                    enum:
+                    - 30
+                    - 60
+                    - 120
+                    - 180
+                    - 300
+                    - 600
+                    - 900
+                    - 1800
+                    - 3600
+                  timeout:
+                    description: Monitoring timeout in milliseconds
+                    type: integer
+                    example: 20000
+                    default: 20000
+                    enum:
+                    - 1000
+                    - 2000
+                    - 3000
+                    - 4000
+                    - 5000
+                    - 6000
+                    - 7000
+                    - 8000
+                    - 9000
+                    - 10000
+                    - 15000
+                    - 20000
+                    - 25000
+                    - 30000
+                  success_assertions:
+                    description: List of assertions that must be true for the check to be considered successful
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Status code assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - status_code
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: in
+                            enum:
+                            - in
+                            - not_in
+                          value:
+                            description: A comma-separated list of status code values, you can use x as a wildcard for any digit.
+                            type: string
+                            example: 2xx,30x,418
+                        type: object
+                      - title: Response header assertion
+                        required:
+                        - type
+                        - selector
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_header
+                          selector:
+                            description: The name of the header to assert
+                            type: string
+                            example: Content-Type
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: equals
+                            enum:
+                            - equals
+                            - not_equals
+                          value:
+                            description: The value of the header to assert
+                            type: string
+                            example: application/json
+                        type: object
+                      - title: Response body assertion
+                        required:
+                        - type
+                        - operator
+                        - value
+                        properties:
+                          type:
+                            description: Type of assertion
+                            type: string
+                            enum:
+                            - response_body
+                          operator:
+                            description: Operator to use for the assertion
+                            type: string
+                            example: contains
+                            enum:
+                            - contains
+                            - not_contains
+                          value:
+                            description: A word or sentence to check in the response body
+                            type: string
+                            example: Hello, World!
+                        type: object
+                  incident_confirmations:
+                    description: Number of uninterrupted failed checks required to create an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  recovery_confirmations:
+                    description: Number of uninterrupted successful checks required to resolve an incident
+                    type: integer
+                    example: 1
+                    default: 3
+                    enum:
+                    - 1
+                    - 2
+                    - 3
+                    - 4
+                    - 5
+                  region_threshold:
+                    description: Number of regions that must fail before an incident is confirmed
+                    type: integer
+                    example: 1
+                    default: 1
+                    maximum: 10
+                    minimum: 1
+                  regions:
+                    description: List of regions where monitoring checks are performed
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.Monitor.RegionEnum'
+                    maxItems: 6
+                    minItems: 1
+                  last_checked_at:
+                    description: Date of the last performed check with a 30s accuracy
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - protocol
+                - request
+                - regions
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+    delete:
+      tags:
+      - Monitors
+      summary: Delete a monitor
+      description: Delete a monitor by ID
+      operationId: deleteUptimeMonitor
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to delete
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, monitor deleted
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+  /uptime/monitors/{monitorId}/pause:
+    post:
+      tags:
+      - Monitors
+      summary: Pause a monitor
+      description: Pause a monitor by ID
+      operationId: pauseUptimeMonitor
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to pause
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, monitor paused
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+  /uptime/monitors/{monitorId}/resume:
+    post:
+      tags:
+      - Monitors
+      summary: Resume a monitor
+      description: Resume a monitor by ID
+      operationId: resumeUptimeMonitor
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to resume
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, monitor resumed
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+  /uptime/monitors/{monitorId}/report:
+    get:
+      tags:
+      - Monitors
+      summary: Get a monitor report
+      description: Get uptime statistics for a single monitor by ID in the selected time window
+      operationId: getUptimeMonitorReport
+      parameters:
+      - name: monitorId
+        in: path
+        description: ID of the monitor to report on
+        required: true
+        schema:
+          type: integer
+      - name: from
+        in: query
+        description: Start of the reporting window
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-04-01T00:00:00Z'
+      - name: to
+        in: query
+        description: End of the reporting window
+        required: false
+        schema:
+          type: string
+          format: date-time
+          example: '2026-04-30T23:59:59Z'
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, monitor report retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    description: Monitor ID
+                    type: integer
+                    example: 12
+                  name:
+                    description: Monitor name
+                    type: string
+                    example: Website
+                  incident_count:
+                    description: Number of incidents affecting this monitor in the selected range
+                    type: integer
+                    example: 2
+                  downtime:
+                    description: Total downtime for this monitor in seconds
+                    type: integer
+                    example: 1500
+                  availability:
+                    description: Availability for this monitor in the selected range, as a percentage
+                    type: number
+                    format: float
+                    example: 99.944
+                  mttr:
+                    description: Mean time to recovery (MTTR) for this monitor, in seconds
+                    type:
+                    - integer
+                    - 'null'
+                    example: 750
+                  mtbf:
+                    description: Mean time between failures (MTBF) for this monitor, in seconds
+                    type:
+                    - integer
+                    - 'null'
+                    example: 43200
+                  highest_incident_impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  incidents:
+                    description: Incidents that affected this monitor in the selected range
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        project_id:
+                          description: Parent project ID
+                          type: integer
+                          example: 1
+                        type:
+                          $ref: '#/components/schemas/Uptime.Incident.TypeEnum'
+                        slug:
+                          description: Incident unique slug name
+                          type: string
+                          example: APP-123
+                        impact:
+                          $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                        state:
+                          $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                        status:
+                          $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                        title:
+                          description: Incident title
+                          type: string
+                          example: Service is not working as expected
+                          maximum: 250
+                          minimum: 1
+                        description:
+                          description: Description of the error that caused the incident
+                          type: string
+                          example: 'The server answered with an unexpected status code: 503.'
+                          maximum: 2000
+                          minimum: 1
+                        exclude_from_downtime:
+                          description: Flag to exclude the incident from downtime calculations
+                          type: boolean
+                          example: false
+                        incident_at:
+                          description: Date of incident confirmation
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        recovery_at:
+                          description: Date of incident recovery
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        monitors:
+                          description: List of monitors linked to the incident
+                          type: array
+                          items:
+                            type: integer
+                          example:
+                          - 1
+                          - 2
+                          - 3
+                          maxItems: 100
+                          minItems: 1
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - impact
+                      - title
+                      - exclude_from_downtime
+                type: object
+        '422':
+          $ref: '#/components/responses/422'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+components:
+  schemas:
+    Uptime.Monitor.RegionEnum:
+      type: string
+      enum:
+      - as-jpn-hnd
+      - as-sgp-sin
+      - as-tha-bkk
+      - eu-deu-fra
+      - eu-fra-cdg
+      - eu-gbr-lhr
+      - eu-swe-arn
+      - ng-nld-ams
+      - na-mex-mex
+      - na-usa-iad
+      - na-usa-sea
+      - oc-aus-syd
+      - sa-bra-gru
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
+    Uptime.Incident.TypeEnum:
+      type: string
+      enum:
+      - monitor
+      - manual
+    Uptime.Monitor.ConnectionEnum:
+      type: string
+      enum:
+      - plain
+      - tls
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    Uptime.Monitor.StatusEnum:
+      type: string
+      enum:
+      - fetching
+      - online
+      - offline
+      - partial
+      - paused
+    links:
+      description: Links for pagination
+      properties:
+        first:
+          type: string
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+      type: object
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+    Uptime.Monitor.ProtocolEnum:
+      type: string
+      enum:
+      - http
+      - tcp
+  parameters:
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+  responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+    '404':
+      description: Error, resource not found
+      content:
+        application/json:
+          schema:
+            description: Not found error schema
+            properties:
+              message:
+                type: string
+                example: Resource not found
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports

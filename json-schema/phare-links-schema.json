@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/phare/main/json-schema/phare-links-schema.json",
+  "title": "links",
+  "description": "Links for pagination",
+  "x-generated": "2026-09-27",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/phare-openapi.json#/components/schemas/links",
+  "properties": {
+    "first": {
+      "type": "string",
+      "format": "url"
+    },
+    "last": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "url"
+    },
+    "prev": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "url"
+    },
+    "next": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "url"
+    }
+  },
+  "type": "object"
+}

@@ -1,0 +1,2181 @@
+openapi: 3.2.0
+info:
+  title: Phare Status Pages API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Status Pages
+  description: Status Pages
+paths:
+  /uptime/status-pages:
+    get:
+      tags:
+      - Status Pages
+      summary: List status pages
+      description: Get a paginated list of status pages
+      operationId: getUptimeStatusPages
+      responses:
+        '200':
+          description: Success, status pages retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: Status page ID
+                          type: integer
+                          example: 1
+                        project_id:
+                          description: Parent project ID
+                          type: integer
+                          example: 1
+                        is_private:
+                          description: Whether the status page requires authentication to access
+                          type: boolean
+                          example: false
+                        access_password_enabled:
+                          description: Whether the status page is protected by a password. Requires an active Scale plan subscription.
+                          type: boolean
+                          example: false
+                        access_token_enabled:
+                          description: Whether the status page is protected by a secret token. Requires an active Scale plan subscription.
+                          type: boolean
+                          example: false
+                        name:
+                          description: Status page name
+                          type: string
+                          example: Phare status
+                          maximum: 30
+                          minimum: 2
+                        subdomain:
+                          description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                          type: string
+                          example: example
+                          maximum: 30
+                          minimum: 2
+                        domain:
+                          description: Custom domain name for the status page
+                          type:
+                          - string
+                          - 'null'
+                          example: status.example.com
+                          maximum: 253
+                          minimum: 4
+                        title:
+                          description: Status page HTML title
+                          type: string
+                          example: Phare status
+                          maximum: 250
+                          minimum: 2
+                        description:
+                          description: Status page HTML description
+                          type: string
+                          example: Status page of phare.io
+                          maximum: 250
+                          minimum: 2
+                        search_engine_indexed:
+                          description: Whether search engines are allowed to index the page
+                          type: boolean
+                          example: true
+                        website_url:
+                          description: URL to redirect users clicking the status page logo
+                          type: string
+                          example: https://phare.io
+                          maximum: 250
+                        color_scheme:
+                          description: Choose the available color schemes for the status page
+                          type: string
+                          example: all
+                          enum:
+                          - all
+                          - dark
+                          - light
+                        theme:
+                          description: Theme settings to customize the status page
+                          properties:
+                            light:
+                              description: Light theme colors
+                              properties:
+                                operational:
+                                  type: string
+                                  example: '#16a34a'
+                                degraded_performance:
+                                  type: string
+                                  example: '#fbbf24'
+                                partial_outage:
+                                  type: string
+                                  example: '#f59e0b'
+                                major_outage:
+                                  type: string
+                                  example: '#ef4444'
+                                maintenance:
+                                  type: string
+                                  example: '#6366f1'
+                                empty:
+                                  type: string
+                                  example: '#d3d3d3'
+                                background:
+                                  type: string
+                                  example: '#ffffff'
+                                foreground:
+                                  type: string
+                                  example: '#000000'
+                                foreground_muted:
+                                  type: string
+                                  example: '#737373'
+                                background_card:
+                                  type: string
+                                  example: '#fafafa'
+                              type: object
+                            dark:
+                              description: Dark theme colors
+                              properties:
+                                operational:
+                                  type: string
+                                  example: '#16a34a'
+                                degraded_performance:
+                                  type: string
+                                  example: '#fbbf24'
+                                partial_outage:
+                                  type: string
+                                  example: '#f59e0b'
+                                major_outage:
+                                  type: string
+                                  example: '#ef4444'
+                                maintenance:
+                                  type: string
+                                  example: '#6366f1'
+                                empty:
+                                  type: string
+                                  example: '#d3d3d3'
+                                background:
+                                  type: string
+                                  example: '#111111'
+                                foreground:
+                                  type: string
+                                  example: '#ffffff'
+                                foreground_muted:
+                                  type: string
+                                  example: '#959595'
+                                background_card:
+                                  type: string
+                                  example: '#1a1a1a'
+                              type: object
+                            rounded:
+                              type: boolean
+                              example: true
+                            border_width:
+                              type: integer
+                              example: 2
+                              maximum: 3
+                              minimum: 0
+                          type: object
+                        components:
+                          description: List of components to show on the status page
+                          type: array
+                          items:
+                            oneOf:
+                            - title: Monitor component
+                              required:
+                              - componentable_type
+                              - componentable_id
+                              properties:
+                                componentable_type:
+                                  type: string
+                                  enum:
+                                  - uptime/monitor
+                                componentable_id:
+                                  description: ID of the monitor to show
+                                  type: integer
+                                display_name:
+                                  description: Custom display name of the monitor on the status page
+                                  type:
+                                  - string
+                                  - 'null'
+                                  example: Main Website
+                                  default: null
+                              type: object
+                            - title: Group component
+                              required:
+                              - componentable_type
+                              - name
+                              - components
+                              properties:
+                                componentable_type:
+                                  type: string
+                                  enum:
+                                  - uptime/group
+                                name:
+                                  description: Name of the group shown on the status page
+                                  type: string
+                                is_expanded:
+                                  description: Whether the group components are expanded by default
+                                  type: boolean
+                                  example: false
+                                components:
+                                  description: List of monitor components shown inside the group
+                                  type: array
+                                  items:
+                                    required:
+                                    - componentable_type
+                                    - componentable_id
+                                    properties:
+                                      componentable_type:
+                                        type: string
+                                        enum:
+                                        - uptime/monitor
+                                      componentable_id:
+                                        description: ID of the monitor to show
+                                        type: integer
+                                      display_name:
+                                        description: Custom display name of the monitor on the status page
+                                        type:
+                                        - string
+                                        - 'null'
+                                        example: Main Website
+                                        default: null
+                                    type: object
+                              type: object
+                        timeframe:
+                          description: Number of days of status and incident history to display.
+                          type: integer
+                          example: 90
+                          enum:
+                          - 30
+                          - 60
+                          - 90
+                        show_response_times:
+                          description: Whether to display response times for monitors on the status page
+                          type: boolean
+                          example: true
+                          default: true
+                        subscription_channels:
+                          description: List of active subscription channels
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                          maxItems: 3
+                          minItems: 0
+                        access_ips:
+                          description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            type: string
+                            example: 45.129.56.0/24
+                          maxItems: 50
+                          minItems: 1
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - name
+                      - subdomain
+                      - title
+                      - description
+                      - search_engine_indexed
+                      - website_url
+                      - components
+                  meta:
+                    $ref: '#/components/schemas/meta'
+                  links:
+                    $ref: '#/components/schemas/links'
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+    post:
+      tags:
+      - Status Pages
+      summary: Create a status page
+      operationId: createUptimeStatusPage
+      requestBody:
+        description: Status page request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Status page name
+                  type: string
+                  example: Phare status
+                  maximum: 30
+                  minimum: 2
+                subdomain:
+                  description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                  type: string
+                  example: example
+                  maximum: 30
+                  minimum: 2
+                domain:
+                  description: Custom domain name for the status page
+                  type:
+                  - string
+                  - 'null'
+                  example: status.example.com
+                  maximum: 253
+                  minimum: 4
+                title:
+                  description: Status page HTML title
+                  type: string
+                  example: Phare status
+                  maximum: 250
+                  minimum: 2
+                description:
+                  description: Status page HTML description
+                  type: string
+                  example: Status page of phare.io
+                  maximum: 250
+                  minimum: 2
+                search_engine_indexed:
+                  description: Whether search engines are allowed to index the page
+                  type: boolean
+                  example: true
+                website_url:
+                  description: URL to redirect users clicking the status page logo
+                  type: string
+                  example: https://phare.io
+                  maximum: 250
+                color_scheme:
+                  description: Choose the available color schemes for the status page
+                  type: string
+                  example: all
+                  enum:
+                  - all
+                  - dark
+                  - light
+                theme:
+                  description: Theme settings to customize the status page
+                  properties:
+                    light:
+                      description: Light theme colors
+                      properties:
+                        operational:
+                          type: string
+                          example: '#16a34a'
+                        degraded_performance:
+                          type: string
+                          example: '#fbbf24'
+                        partial_outage:
+                          type: string
+                          example: '#f59e0b'
+                        major_outage:
+                          type: string
+                          example: '#ef4444'
+                        maintenance:
+                          type: string
+                          example: '#6366f1'
+                        empty:
+                          type: string
+                          example: '#d3d3d3'
+                        background:
+                          type: string
+                          example: '#ffffff'
+                        foreground:
+                          type: string
+                          example: '#000000'
+                        foreground_muted:
+                          type: string
+                          example: '#737373'
+                        background_card:
+                          type: string
+                          example: '#fafafa'
+                      type: object
+                    dark:
+                      description: Dark theme colors
+                      properties:
+                        operational:
+                          type: string
+                          example: '#16a34a'
+                        degraded_performance:
+                          type: string
+                          example: '#fbbf24'
+                        partial_outage:
+                          type: string
+                          example: '#f59e0b'
+                        major_outage:
+                          type: string
+                          example: '#ef4444'
+                        maintenance:
+                          type: string
+                          example: '#6366f1'
+                        empty:
+                          type: string
+                          example: '#d3d3d3'
+                        background:
+                          type: string
+                          example: '#111111'
+                        foreground:
+                          type: string
+                          example: '#ffffff'
+                        foreground_muted:
+                          type: string
+                          example: '#959595'
+                        background_card:
+                          type: string
+                          example: '#1a1a1a'
+                      type: object
+                    rounded:
+                      type: boolean
+                      example: true
+                    border_width:
+                      type: integer
+                      example: 2
+                      maximum: 3
+                      minimum: 0
+                  type: object
+                components:
+                  description: List of components to show on the status page
+                  type: array
+                  items:
+                    oneOf:
+                    - title: Monitor component
+                      required:
+                      - componentable_type
+                      - componentable_id
+                      properties:
+                        componentable_type:
+                          type: string
+                          enum:
+                          - uptime/monitor
+                        componentable_id:
+                          description: ID of the monitor to show
+                          type: integer
+                        display_name:
+                          description: Custom display name of the monitor on the status page
+                          type:
+                          - string
+                          - 'null'
+                          example: Main Website
+                          default: null
+                      type: object
+                    - title: Group component
+                      required:
+                      - componentable_type
+                      - name
+                      - components
+                      properties:
+                        componentable_type:
+                          type: string
+                          enum:
+                          - uptime/group
+                        name:
+                          description: Name of the group shown on the status page
+                          type: string
+                        is_expanded:
+                          description: Whether the group components are expanded by default
+                          type: boolean
+                          example: false
+                        components:
+                          description: List of monitor components shown inside the group
+                          type: array
+                          items:
+                            required:
+                            - componentable_type
+                            - componentable_id
+                            properties:
+                              componentable_type:
+                                type: string
+                                enum:
+                                - uptime/monitor
+                              componentable_id:
+                                description: ID of the monitor to show
+                                type: integer
+                              display_name:
+                                description: Custom display name of the monitor on the status page
+                                type:
+                                - string
+                                - 'null'
+                                example: Main Website
+                                default: null
+                            type: object
+                      type: object
+                timeframe:
+                  description: Number of days of status and incident history to display.
+                  type: integer
+                  example: 90
+                  enum:
+                  - 30
+                  - 60
+                  - 90
+                show_response_times:
+                  description: Whether to display response times for monitors on the status page
+                  type: boolean
+                  example: true
+                  default: true
+                subscription_channels:
+                  description: List of active subscription channels
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                  maxItems: 3
+                  minItems: 0
+                access_ips:
+                  description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    example: 45.129.56.0/24
+                  maxItems: 50
+                  minItems: 1
+                logo_light:
+                  description: 'Manage the light theme logo of the status page (accepted formats: jpeg / png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: jpeg / png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the logo will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                logo_dark:
+                  description: 'Manage the dark theme logo of the status page (accepted formats: jpeg / png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: jpeg / png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the logo will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                favicon_light:
+                  description: 'Manage the light theme favicon of the status page (accepted formats: png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the favicon will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                favicon_dark:
+                  description: 'Manage the dark theme favicon of the status page (accepted formats: png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the favicon will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                access_token:
+                  description: Token to restrict access to the status page. Requires an active Scale plan subscription.
+                  type:
+                  - string
+                  - 'null'
+                  example: secret
+                  maxLength: 500
+                  minLength: 8
+                access_password:
+                  description: Password to restrict access to the status page. Requires an active Scale plan subscription.
+                  type:
+                  - string
+                  - 'null'
+                  example: secret
+                  maxLength: 500
+                  minLength: 8
+              required:
+              - name
+              - subdomain
+              - title
+              - description
+              - search_engine_indexed
+              - website_url
+              - components
+      responses:
+        '201':
+          description: Success, status page created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Status page ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  is_private:
+                    description: Whether the status page requires authentication to access
+                    type: boolean
+                    example: false
+                  access_password_enabled:
+                    description: Whether the status page is protected by a password. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  access_token_enabled:
+                    description: Whether the status page is protected by a secret token. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  name:
+                    description: Status page name
+                    type: string
+                    example: Phare status
+                    maximum: 30
+                    minimum: 2
+                  subdomain:
+                    description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                    type: string
+                    example: example
+                    maximum: 30
+                    minimum: 2
+                  domain:
+                    description: Custom domain name for the status page
+                    type:
+                    - string
+                    - 'null'
+                    example: status.example.com
+                    maximum: 253
+                    minimum: 4
+                  title:
+                    description: Status page HTML title
+                    type: string
+                    example: Phare status
+                    maximum: 250
+                    minimum: 2
+                  description:
+                    description: Status page HTML description
+                    type: string
+                    example: Status page of phare.io
+                    maximum: 250
+                    minimum: 2
+                  search_engine_indexed:
+                    description: Whether search engines are allowed to index the page
+                    type: boolean
+                    example: true
+                  website_url:
+                    description: URL to redirect users clicking the status page logo
+                    type: string
+                    example: https://phare.io
+                    maximum: 250
+                  color_scheme:
+                    description: Choose the available color schemes for the status page
+                    type: string
+                    example: all
+                    enum:
+                    - all
+                    - dark
+                    - light
+                  theme:
+                    description: Theme settings to customize the status page
+                    properties:
+                      light:
+                        description: Light theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#ffffff'
+                          foreground:
+                            type: string
+                            example: '#000000'
+                          foreground_muted:
+                            type: string
+                            example: '#737373'
+                          background_card:
+                            type: string
+                            example: '#fafafa'
+                        type: object
+                      dark:
+                        description: Dark theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#111111'
+                          foreground:
+                            type: string
+                            example: '#ffffff'
+                          foreground_muted:
+                            type: string
+                            example: '#959595'
+                          background_card:
+                            type: string
+                            example: '#1a1a1a'
+                        type: object
+                      rounded:
+                        type: boolean
+                        example: true
+                      border_width:
+                        type: integer
+                        example: 2
+                        maximum: 3
+                        minimum: 0
+                    type: object
+                  components:
+                    description: List of components to show on the status page
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Monitor component
+                        required:
+                        - componentable_type
+                        - componentable_id
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/monitor
+                          componentable_id:
+                            description: ID of the monitor to show
+                            type: integer
+                          display_name:
+                            description: Custom display name of the monitor on the status page
+                            type:
+                            - string
+                            - 'null'
+                            example: Main Website
+                            default: null
+                        type: object
+                      - title: Group component
+                        required:
+                        - componentable_type
+                        - name
+                        - components
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/group
+                          name:
+                            description: Name of the group shown on the status page
+                            type: string
+                          is_expanded:
+                            description: Whether the group components are expanded by default
+                            type: boolean
+                            example: false
+                          components:
+                            description: List of monitor components shown inside the group
+                            type: array
+                            items:
+                              required:
+                              - componentable_type
+                              - componentable_id
+                              properties:
+                                componentable_type:
+                                  type: string
+                                  enum:
+                                  - uptime/monitor
+                                componentable_id:
+                                  description: ID of the monitor to show
+                                  type: integer
+                                display_name:
+                                  description: Custom display name of the monitor on the status page
+                                  type:
+                                  - string
+                                  - 'null'
+                                  example: Main Website
+                                  default: null
+                              type: object
+                        type: object
+                  timeframe:
+                    description: Number of days of status and incident history to display.
+                    type: integer
+                    example: 90
+                    enum:
+                    - 30
+                    - 60
+                    - 90
+                  show_response_times:
+                    description: Whether to display response times for monitors on the status page
+                    type: boolean
+                    example: true
+                    default: true
+                  subscription_channels:
+                    description: List of active subscription channels
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                    maxItems: 3
+                    minItems: 0
+                  access_ips:
+                    description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 45.129.56.0/24
+                    maxItems: 50
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - subdomain
+                - title
+                - description
+                - search_engine_indexed
+                - website_url
+                - components
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+      parameters:
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+  /uptime/status-pages/{statusPageId}:
+    get:
+      tags:
+      - Status Pages
+      summary: Get a status page
+      description: Get a status page by ID
+      operationId: getUptimeStatusPage
+      parameters:
+      - name: statusPageId
+        in: path
+        description: ID of the status page to show
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, status page retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Status page ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  is_private:
+                    description: Whether the status page requires authentication to access
+                    type: boolean
+                    example: false
+                  access_password_enabled:
+                    description: Whether the status page is protected by a password. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  access_token_enabled:
+                    description: Whether the status page is protected by a secret token. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  name:
+                    description: Status page name
+                    type: string
+                    example: Phare status
+                    maximum: 30
+                    minimum: 2
+                  subdomain:
+                    description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                    type: string
+                    example: example
+                    maximum: 30
+                    minimum: 2
+                  domain:
+                    description: Custom domain name for the status page
+                    type:
+                    - string
+                    - 'null'
+                    example: status.example.com
+                    maximum: 253
+                    minimum: 4
+                  title:
+                    description: Status page HTML title
+                    type: string
+                    example: Phare status
+                    maximum: 250
+                    minimum: 2
+                  description:
+                    description: Status page HTML description
+                    type: string
+                    example: Status page of phare.io
+                    maximum: 250
+                    minimum: 2
+                  search_engine_indexed:
+                    description: Whether search engines are allowed to index the page
+                    type: boolean
+                    example: true
+                  website_url:
+                    description: URL to redirect users clicking the status page logo
+                    type: string
+                    example: https://phare.io
+                    maximum: 250
+                  color_scheme:
+                    description: Choose the available color schemes for the status page
+                    type: string
+                    example: all
+                    enum:
+                    - all
+                    - dark
+                    - light
+                  theme:
+                    description: Theme settings to customize the status page
+                    properties:
+                      light:
+                        description: Light theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#ffffff'
+                          foreground:
+                            type: string
+                            example: '#000000'
+                          foreground_muted:
+                            type: string
+                            example: '#737373'
+                          background_card:
+                            type: string
+                            example: '#fafafa'
+                        type: object
+                      dark:
+                        description: Dark theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#111111'
+                          foreground:
+                            type: string
+                            example: '#ffffff'
+                          foreground_muted:
+                            type: string
+                            example: '#959595'
+                          background_card:
+                            type: string
+                            example: '#1a1a1a'
+                        type: object
+                      rounded:
+                        type: boolean
+                        example: true
+                      border_width:
+                        type: integer
+                        example: 2
+                        maximum: 3
+                        minimum: 0
+                    type: object
+                  components:
+                    description: List of components to show on the status page
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Monitor component
+                        required:
+                        - componentable_type
+                        - componentable_id
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/monitor
+                          componentable_id:
+                            description: ID of the monitor to show
+                            type: integer
+                          display_name:
+                            description: Custom display name of the monitor on the status page
+                            type:
+                            - string
+                            - 'null'
+                            example: Main Website
+                            default: null
+                        type: object
+                      - title: Group component
+                        required:
+                        - componentable_type
+                        - name
+                        - components
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/group
+                          name:
+                            description: Name of the group shown on the status page
+                            type: string
+                          is_expanded:
+                            description: Whether the group components are expanded by default
+                            type: boolean
+                            example: false
+                          components:
+                            description: List of monitor components shown inside the group
+                            type: array
+                            items:
+                              required:
+                              - componentable_type
+                              - componentable_id
+                              properties:
+                                componentable_type:
+                                  type: string
+                                  enum:
+                                  - uptime/monitor
+                                componentable_id:
+                                  description: ID of the monitor to show
+                                  type: integer
+                                display_name:
+                                  description: Custom display name of the monitor on the status page
+                                  type:
+                                  - string
+                                  - 'null'
+                                  example: Main Website
+                                  default: null
+                              type: object
+                        type: object
+                  timeframe:
+                    description: Number of days of status and incident history to display.
+                    type: integer
+                    example: 90
+                    enum:
+                    - 30
+                    - 60
+                    - 90
+                  show_response_times:
+                    description: Whether to display response times for monitors on the status page
+                    type: boolean
+                    example: true
+                    default: true
+                  subscription_channels:
+                    description: List of active subscription channels
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                    maxItems: 3
+                    minItems: 0
+                  access_ips:
+                    description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 45.129.56.0/24
+                    maxItems: 50
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - subdomain
+                - title
+                - description
+                - search_engine_indexed
+                - website_url
+                - components
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+      - Status Pages
+      summary: Update a status page
+      description: Update a status page by ID
+      operationId: updateUptimeStatusPage
+      parameters:
+      - name: statusPageId
+        in: path
+        description: ID of the status page to update
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      requestBody:
+        description: Status page request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Status page name
+                  type: string
+                  example: Phare status
+                  maximum: 30
+                  minimum: 2
+                subdomain:
+                  description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                  type: string
+                  example: example
+                  maximum: 30
+                  minimum: 2
+                domain:
+                  description: Custom domain name for the status page
+                  type:
+                  - string
+                  - 'null'
+                  example: status.example.com
+                  maximum: 253
+                  minimum: 4
+                title:
+                  description: Status page HTML title
+                  type: string
+                  example: Phare status
+                  maximum: 250
+                  minimum: 2
+                description:
+                  description: Status page HTML description
+                  type: string
+                  example: Status page of phare.io
+                  maximum: 250
+                  minimum: 2
+                search_engine_indexed:
+                  description: Whether search engines are allowed to index the page
+                  type: boolean
+                  example: true
+                website_url:
+                  description: URL to redirect users clicking the status page logo
+                  type: string
+                  example: https://phare.io
+                  maximum: 250
+                color_scheme:
+                  description: Choose the available color schemes for the status page
+                  type: string
+                  example: all
+                  enum:
+                  - all
+                  - dark
+                  - light
+                theme:
+                  description: Theme settings to customize the status page
+                  properties:
+                    light:
+                      description: Light theme colors
+                      properties:
+                        operational:
+                          type: string
+                          example: '#16a34a'
+                        degraded_performance:
+                          type: string
+                          example: '#fbbf24'
+                        partial_outage:
+                          type: string
+                          example: '#f59e0b'
+                        major_outage:
+                          type: string
+                          example: '#ef4444'
+                        maintenance:
+                          type: string
+                          example: '#6366f1'
+                        empty:
+                          type: string
+                          example: '#d3d3d3'
+                        background:
+                          type: string
+                          example: '#ffffff'
+                        foreground:
+                          type: string
+                          example: '#000000'
+                        foreground_muted:
+                          type: string
+                          example: '#737373'
+                        background_card:
+                          type: string
+                          example: '#fafafa'
+                      type: object
+                    dark:
+                      description: Dark theme colors
+                      properties:
+                        operational:
+                          type: string
+                          example: '#16a34a'
+                        degraded_performance:
+                          type: string
+                          example: '#fbbf24'
+                        partial_outage:
+                          type: string
+                          example: '#f59e0b'
+                        major_outage:
+                          type: string
+                          example: '#ef4444'
+                        maintenance:
+                          type: string
+                          example: '#6366f1'
+                        empty:
+                          type: string
+                          example: '#d3d3d3'
+                        background:
+                          type: string
+                          example: '#111111'
+                        foreground:
+                          type: string
+                          example: '#ffffff'
+                        foreground_muted:
+                          type: string
+                          example: '#959595'
+                        background_card:
+                          type: string
+                          example: '#1a1a1a'
+                      type: object
+                    rounded:
+                      type: boolean
+                      example: true
+                    border_width:
+                      type: integer
+                      example: 2
+                      maximum: 3
+                      minimum: 0
+                  type: object
+                components:
+                  description: List of components to show on the status page
+                  type: array
+                  items:
+                    oneOf:
+                    - title: Monitor component
+                      required:
+                      - componentable_type
+                      - componentable_id
+                      properties:
+                        componentable_type:
+                          type: string
+                          enum:
+                          - uptime/monitor
+                        componentable_id:
+                          description: ID of the monitor to show
+                          type: integer
+                        display_name:
+                          description: Custom display name of the monitor on the status page
+                          type:
+                          - string
+                          - 'null'
+                          example: Main Website
+                          default: null
+                      type: object
+                    - title: Group component
+                      required:
+                      - componentable_type
+                      - name
+                      - components
+                      properties:
+                        componentable_type:
+                          type: string
+                          enum:
+                          - uptime/group
+                        name:
+                          description: Name of the group shown on the status page
+                          type: string
+                        is_expanded:
+                          description: Whether the group components are expanded by default
+                          type: boolean
+                          example: false
+                        components:
+                          description: List of monitor components shown inside the group
+                          type: array
+                          items:
+                            required:
+                            - componentable_type
+                            - componentable_id
+                            properties:
+                              componentable_type:
+                                type: string
+                                enum:
+                                - uptime/monitor
+                              componentable_id:
+                                description: ID of the monitor to show
+                                type: integer
+                              display_name:
+                                description: Custom display name of the monitor on the status page
+                                type:
+                                - string
+                                - 'null'
+                                example: Main Website
+                                default: null
+                            type: object
+                      type: object
+                timeframe:
+                  description: Number of days of status and incident history to display.
+                  type: integer
+                  example: 90
+                  enum:
+                  - 30
+                  - 60
+                  - 90
+                show_response_times:
+                  description: Whether to display response times for monitors on the status page
+                  type: boolean
+                  example: true
+                  default: true
+                subscription_channels:
+                  description: List of active subscription channels
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                  maxItems: 3
+                  minItems: 0
+                access_ips:
+                  description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    example: 45.129.56.0/24
+                  maxItems: 50
+                  minItems: 1
+                logo_light:
+                  description: 'Manage the light theme logo of the status page (accepted formats: jpeg / png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: jpeg / png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the logo will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                logo_dark:
+                  description: 'Manage the dark theme logo of the status page (accepted formats: jpeg / png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: jpeg / png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the logo will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                favicon_light:
+                  description: 'Manage the light theme favicon of the status page (accepted formats: png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the favicon will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                favicon_dark:
+                  description: 'Manage the dark theme favicon of the status page (accepted formats: png / svg)'
+                  oneOf:
+                  - description: 'Any image file with the following format: png / svg.'
+                    type:
+                    - string
+                    - 'null'
+                    format: file
+                  - description: If "false" is passed to the request the favicon will be removed
+                    type:
+                    - string
+                    - 'null'
+                    example: 'false'
+                    enum:
+                    - 'false'
+                access_token:
+                  description: Token to restrict access to the status page. Requires an active Scale plan subscription.
+                  type:
+                  - string
+                  - 'null'
+                  example: secret
+                  maxLength: 500
+                  minLength: 8
+                access_password:
+                  description: Password to restrict access to the status page. Requires an active Scale plan subscription.
+                  type:
+                  - string
+                  - 'null'
+                  example: secret
+                  maxLength: 500
+                  minLength: 8
+      responses:
+        '200':
+          description: Success, status page updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Status page ID
+                    type: integer
+                    example: 1
+                  project_id:
+                    description: Parent project ID
+                    type: integer
+                    example: 1
+                  is_private:
+                    description: Whether the status page requires authentication to access
+                    type: boolean
+                    example: false
+                  access_password_enabled:
+                    description: Whether the status page is protected by a password. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  access_token_enabled:
+                    description: Whether the status page is protected by a secret token. Requires an active Scale plan subscription.
+                    type: boolean
+                    example: false
+                  name:
+                    description: Status page name
+                    type: string
+                    example: Phare status
+                    maximum: 30
+                    minimum: 2
+                  subdomain:
+                    description: 'Subdomain name for the status page, hosted on a phare.io domain: {subdomain}.status.phare.io'
+                    type: string
+                    example: example
+                    maximum: 30
+                    minimum: 2
+                  domain:
+                    description: Custom domain name for the status page
+                    type:
+                    - string
+                    - 'null'
+                    example: status.example.com
+                    maximum: 253
+                    minimum: 4
+                  title:
+                    description: Status page HTML title
+                    type: string
+                    example: Phare status
+                    maximum: 250
+                    minimum: 2
+                  description:
+                    description: Status page HTML description
+                    type: string
+                    example: Status page of phare.io
+                    maximum: 250
+                    minimum: 2
+                  search_engine_indexed:
+                    description: Whether search engines are allowed to index the page
+                    type: boolean
+                    example: true
+                  website_url:
+                    description: URL to redirect users clicking the status page logo
+                    type: string
+                    example: https://phare.io
+                    maximum: 250
+                  color_scheme:
+                    description: Choose the available color schemes for the status page
+                    type: string
+                    example: all
+                    enum:
+                    - all
+                    - dark
+                    - light
+                  theme:
+                    description: Theme settings to customize the status page
+                    properties:
+                      light:
+                        description: Light theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#ffffff'
+                          foreground:
+                            type: string
+                            example: '#000000'
+                          foreground_muted:
+                            type: string
+                            example: '#737373'
+                          background_card:
+                            type: string
+                            example: '#fafafa'
+                        type: object
+                      dark:
+                        description: Dark theme colors
+                        properties:
+                          operational:
+                            type: string
+                            example: '#16a34a'
+                          degraded_performance:
+                            type: string
+                            example: '#fbbf24'
+                          partial_outage:
+                            type: string
+                            example: '#f59e0b'
+                          major_outage:
+                            type: string
+                            example: '#ef4444'
+                          maintenance:
+                            type: string
+                            example: '#6366f1'
+                          empty:
+                            type: string
+                            example: '#d3d3d3'
+                          background:
+                            type: string
+                            example: '#111111'
+                          foreground:
+                            type: string
+                            example: '#ffffff'
+                          foreground_muted:
+                            type: string
+                            example: '#959595'
+                          background_card:
+                            type: string
+                            example: '#1a1a1a'
+                        type: object
+                      rounded:
+                        type: boolean
+                        example: true
+                      border_width:
+                        type: integer
+                        example: 2
+                        maximum: 3
+                        minimum: 0
+                    type: object
+                  components:
+                    description: List of components to show on the status page
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Monitor component
+                        required:
+                        - componentable_type
+                        - componentable_id
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/monitor
+                          componentable_id:
+                            description: ID of the monitor to show
+                            type: integer
+                          display_name:
+                            description: Custom display name of the monitor on the status page
+                            type:
+                            - string
+                            - 'null'
+                            example: Main Website
+                            default: null
+                        type: object
+                      - title: Group component
+                        required:
+                        - componentable_type
+                        - name
+                        - components
+                        properties:
+                          componentable_type:
+                            type: string
+                            enum:
+                            - uptime/group
+                          name:
+                            description: Name of the group shown on the status page
+                            type: string
+                          is_expanded:
+                            description: Whether the group components are expanded by default
+                            type: boolean
+                            example: false
+                          components:
+                            description: List of monitor components shown inside the group
+                            type: array
+                            items:
+                              required:
+                              - componentable_type
+                              - componentable_id
+                              properties:
+                                componentable_type:
+                                  type: string
+                                  enum:
+                                  - uptime/monitor
+                                componentable_id:
+                                  description: ID of the monitor to show
+                                  type: integer
+                                display_name:
+                                  description: Custom display name of the monitor on the status page
+                                  type:
+                                  - string
+                                  - 'null'
+                                  example: Main Website
+                                  default: null
+                              type: object
+                        type: object
+                  timeframe:
+                    description: Number of days of status and incident history to display.
+                    type: integer
+                    example: 90
+                    enum:
+                    - 30
+                    - 60
+                    - 90
+                  show_response_times:
+                    description: Whether to display response times for monitors on the status page
+                    type: boolean
+                    example: true
+                    default: true
+                  subscription_channels:
+                    description: List of active subscription channels
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Uptime.StatusPage.SubscriptionChannelEnum'
+                    maxItems: 3
+                    minItems: 0
+                  access_ips:
+                    description: List of IP addresses or CIDR ranges allowed to access the status page. Requires an active Scale plan subscription.
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      example: 45.129.56.0/24
+                    maxItems: 50
+                    minItems: 1
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - subdomain
+                - title
+                - description
+                - search_engine_indexed
+                - website_url
+                - components
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+    delete:
+      tags:
+      - Status Pages
+      summary: Delete a status page
+      description: Delete a status page by ID
+      operationId: deleteUptimeStatusPage
+      parameters:
+      - name: statusPageId
+        in: path
+        description: ID of the status page to delete
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '204':
+          description: Success, status page deleted
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+  /uptime/status-pages/{statusPageId}/current-status:
+    get:
+      tags:
+      - Status Pages
+      summary: Get a status page current status
+      description: Get a status page current status by ID
+      operationId: getUptimeStatusPageCurrentStatus
+      parameters:
+      - name: statusPageId
+        in: path
+        description: ID of the status page to show the current status for
+        required: true
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/header_project_id'
+      - $ref: '#/components/parameters/header_project_slug'
+      responses:
+        '200':
+          description: Success, status page current status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_incident_impact:
+                    $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                  availability:
+                    description: Average availability of all associated monitors in the last 90 days, in percents
+                    type: number
+                    format: float
+                    example: 99.9999
+                  updated_at:
+                    description: Date of the data calculation
+                    type: string
+                    format: date-time
+                  components:
+                    description: Components of the status page and their current status
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Monitor component
+                        properties:
+                          component_type:
+                            type: string
+                            enum:
+                            - uptime/monitor
+                          component_id:
+                            type: integer
+                            example: 1
+                          name:
+                            description: Monitor name
+                            type: string
+                            example: Website
+                            maximum: 30
+                            minimum: 2
+                          response_time:
+                            description: Rolling average response time of the last 10 requests, in milliseconds
+                            type:
+                            - integer
+                            - 'null'
+                            example: 123
+                          availability:
+                            description: Availability in the last 90 days, in percents
+                            type: number
+                            format: float
+                            example: 99.9999
+                          current_incident_impact:
+                            $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                        type: object
+                      - title: Group component
+                        properties:
+                          component_type:
+                            type: string
+                            enum:
+                            - uptime/group
+                          name:
+                            description: Group name
+                            type: string
+                            example: Websites
+                            maximum: 100
+                            minimum: 1
+                          response_time:
+                            description: Rolling average response time of the last 10 requests, in milliseconds
+                            type:
+                            - integer
+                            - 'null'
+                            example: 123
+                          availability:
+                            description: Availability in the last 90 days, in percents
+                            type: number
+                            format: float
+                            example: 99.9999
+                          current_incident_impact:
+                            $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                          components:
+                            description: Components of the group
+                            type: array
+                            items:
+                              properties:
+                                component_type:
+                                  type: string
+                                  enum:
+                                  - uptime/monitor
+                                component_id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  description: Monitor name
+                                  type: string
+                                  example: Website
+                                  maximum: 30
+                                  minimum: 2
+                                response_time:
+                                  description: Rolling average response time of the last 10 requests, in milliseconds
+                                  type:
+                                  - integer
+                                  - 'null'
+                                  example: 123
+                                availability:
+                                  description: Availability in the last 90 days, in percents
+                                  type: number
+                                  format: float
+                                  example: 99.9999
+                                current_incident_impact:
+                                  $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                              type: object
+                        type: object
+                  active_incidents:
+                    description: Active incidents linked to the status page
+                    type: array
+                    items:
+                      oneOf:
+                      - title: Incident
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          title:
+                            description: Incident title
+                            type: string
+                            example: Service is not working as expected
+                            maximum: 30
+                          impact:
+                            $ref: '#/components/schemas/Uptime.Incident.ImpactEnum'
+                          state:
+                            $ref: '#/components/schemas/Uptime.Incident.StateEnum'
+                          status:
+                            $ref: '#/components/schemas/Uptime.Incident.StatusEnum'
+                          exclude_from_downtime:
+                            description: Flag to exclude the incident from downtime calculations
+                            type: boolean
+                            example: false
+                          incident_at:
+                            description: Date of incident confirmation
+                            type:
+                            - string
+                            - 'null'
+                            format: date-time
+                          recovery_at:
+                            description: Date of incident recovery
+                            type:
+                            - string
+                            - 'null'
+                            format: date-time
+                        type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+components:
+  schemas:
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    links:
+      description: Links for pagination
+      properties:
+        first:
+          type: string
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+      type: object
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+    Uptime.StatusPage.SubscriptionChannelEnum:
+      type: string
+      enum:
+      - rss
+      - atom
+      - slack
+  parameters:
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+  responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+    '404':
+      description: Error, resource not found
+      content:
+        application/json:
+          schema:
+            description: Not found error schema
+            properties:
+              message:
+                type: string
+                example: Resource not found
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports

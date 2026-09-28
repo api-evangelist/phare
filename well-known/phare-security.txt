@@ -1,0 +1,5 @@
+Contact: mailto:security@phare.io
+Policy: https://phare.io/legal/vulnerability-disclosure
+Canonical: https://phare.io/.well-known/security.txt
+Preferred-Languages: en, fr
+Expires: 2027-01-01T00:00:00.000Z

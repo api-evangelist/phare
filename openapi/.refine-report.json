@@ -1,0 +1,28 @@
+{
+  "provider": "phare",
+  "sources": [
+    "phare-openapi.json"
+  ],
+  "outputs": [
+    "phare-alert-rules-api-openapi.yml",
+    "phare-incidents-api-openapi.yml",
+    "phare-integrations-api-openapi.yml",
+    "phare-maintenance-windows-api-openapi.yml",
+    "phare-monitors-api-openapi.yml",
+    "phare-platform-api-openapi.yml",
+    "phare-projects-api-openapi.yml",
+    "phare-reports-api-openapi.yml",
+    "phare-status-pages-api-openapi.yml",
+    "phare-users-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/phare-openapi.json"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "phare-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+10 apis, 10 total)"
+  ],
+  "skipped": []
+}

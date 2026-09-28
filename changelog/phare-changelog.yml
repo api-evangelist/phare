@@ -1,0 +1,71 @@
+generated: '2026-09-27'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://docs.phare.io/changelog/platform/2026.md
+sources:
+- https://docs.phare.io/changelog/platform/2026.md
+- https://docs.phare.io/changelog/platform/2025.md
+- https://docs.phare.io/changelog/platform/2024.md
+- https://docs.phare.io/changelog/platform/2023.md
+entries:
+- breaking: false
+  highlights:
+  - You can now define a custom **Display name** for each monitor on your status page, allowing you to have technical internal monitor name while
+    keeping your status page user friendly.
+  - Status pages display the 75th percentile (P75) response time over the last 7 days next to each monitor by default.
+  - You can now toggle off **Response times** in your status page settings to hide them completely.
+  date: '2026-09-01'
+- breaking: false
+  highlights:
+  - You can now plan and schedule maintenance windows in advance to avoid false alarms, keep your SLA metrics accurate, and more importantly keep
+    your customers informed during planned downtime.
+  - 'Maintenance windows can be configured with different monitoring mode: **Pause**, **Mute**, **Normal**.'
+  - Maintenance windows can be linked to multiple status page at once to cover advanced use.
+  date: '2026-08-01'
+- breaking: false
+  highlights:
+  - You can now organize your monitors into customizable, collapsible groups (such as "API Services" or "Databases") to give visitors a clearer
+    view of system health.
+  - Drag and drop monitors into groups, reorder sections on the fly, and collapse groups directly on your public status pages.
+  date: '2026-07-01'
+- breaking: false
+  highlights:
+  - A formal Data Processing Agreement (DPA) is now publicly available to help customers meet GDPR compliance requirements when using Phare without
+    having to submit a formal request.
+  date: '2026-06-01'
+- breaking: false
+  highlights:
+  - You can now restrict access to your status pages using three complementary control mechanisms, available on the Scale plan.
+  - 'IP allowlist: Grant automatic access to specific IP addresses or CIDR ranges.'
+  - 'Access token: Append a secret `token` query parameter to any status page URL to grant access.'
+  - 'Access password: Visitors are prompted with a login screen before they can view the page.'
+  date: '2026-05-01'
+- breaking: false
+  highlights:
+  - It is now possible to order all data-tables on your Phare dashboard.
+  - Order incidents by recovery date, monitors alphabetically, certificates by expiration dates, combined with filtering and text search this
+    allows you to display the data you need for your workflow.
+  date: '2026-05-01'
+- breaking: false
+  highlights:
+  - Phare updated the AI model used for to generate incident summary and post-mortems from Magistral small to Mistral Small.
+  - Mistral Small offers better performance, lower costs, optimized underlying architecture and a jump from 24B to 119B tokens.
+  date: '2026-05-01'
+- breaking: false
+  highlights:
+  - Monitor can now individually configure in how many regions they must be detected as down to trigger an incident.
+  - This allow you to fine tune your incident detection strategy to your specific needs.
+  date: '2026-04-01'
+- breaking: false
+  highlights:
+  - It is now possible to show different logos and favicons on your status page depending on the theme shown.
+  date: '2026-03-01'
+- breaking: false
+  highlights:
+  - You can now forward 5 alert events to your ilert account, and they all got upgraded with way more data than before.
+  - 'The following events are now compatible: Incident created, Incident propagated, Incident recovered, Monitor certificate discovered, Monitor
+    certificate expiring.'
+  date: '2026-03-01'
+note: Versioning scheme and current version are not specified on the provided pages. 1 extracted row(s) were dropped because their quote was not
+  on the page.
+docs: https://docs.phare.io/changelog/platform/2026.md

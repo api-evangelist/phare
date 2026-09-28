@@ -1,0 +1,28 @@
+generated: '2026-09-27'
+method: generated
+generator: extract-docs-artifacts.py skills (local)
+source: openapi/phare-openapi.json
+skills:
+- file: skills/phare-manage-monitor.md
+  name: phare-manage-monitor
+  api: openapi/phare-openapi.json
+  operations:
+  - createUptimeMonitor
+  - getUptimeMonitor
+  - pauseUptimeMonitor
+  - resumeUptimeMonitor
+  - deleteUptimeMonitor
+- file: skills/phare-create-status-page.md
+  name: phare-create-status-page
+  api: openapi/phare-openapi.json
+  operations:
+  - createUptimeStatusPage
+  - getUptimeStatusPage
+- file: skills/phare-manage-alert-rules.md
+  name: phare-manage-alert-rules
+  api: openapi/phare-openapi.json
+  operations:
+  - createUptimeAlertRule
+  - getAlertRule
+  - updateUptimeAlertRule
+  - deleteUptimeAlertRule

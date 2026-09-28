@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/phare/main/json-schema/phare-platform-app-pushover-alert-rule-settings-schema.json",
+  "title": "Pushover",
+  "x-generated": "2026-09-27",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/phare-openapi.json#/components/schemas/Platform.App.Pushover.AlertRuleSettings",
+  "properties": {
+    "priority": {
+      "description": "Notification priority level",
+      "type": "string",
+      "enum": [
+        "lowest",
+        "low",
+        "normal",
+        "high",
+        "emergency"
+      ]
+    },
+    "retry": {
+      "description": "Retry interval in seconds (required for emergency priority)",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "maximum": 86400,
+      "minimum": 30
+    },
+    "expire": {
+      "description": "Expiration time in seconds (required for emergency priority)",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "maximum": 10800,
+      "minimum": 30
+    }
+  },
+  "type": "object"
+}

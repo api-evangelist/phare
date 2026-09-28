@@ -1,0 +1,31 @@
+generated: '2026-09-27'
+method: probed
+source: https://phare.io/legal
+signals:
+  data_subject_request:
+    url: https://phare.io/legal/privacy-policy
+    section: "Data Subject Request (DSR)"
+    note: Defines DSR, indicating they acknowledge data subject requests.
+    evidence:
+      - source: https://phare.io/legal/privacy-policy
+        http_status: 200
+        fetched: "true"
+        quote: "Data Subject Request (DSR): means any request from the Data Subject and concerning their personal data and/or data subject rights."
+  subprocessors:
+    url: https://phare.io/legal/sub-processors
+    section: "European sub-processors"
+    note: Lists sub-processors and commitment to GDPR compliance.
+    evidence:
+      - source: https://phare.io/legal/sub-processors
+        http_status: 200
+        fetched: "true"
+        quote: "Phare prioritizes European companies that use European hosting whenever possible, this is to ensure: Better Privacy : GDPR compliance isn't just a checkbox, it's baked in"
+  incident_notification:
+    url: https://phare.io/legal/privacy-policy
+    section: "Data Breach"
+    note: Defines data breach, implying incident notification obligations.
+    evidence:
+      - source: https://phare.io/legal/privacy-policy
+        http_status: 200
+        fetched: "true"
+        quote: "Data Breach: means a breach of the security and/or confidentiality leading to the accidental or unlawful destruction, loss, alteration, unauthorized disclosure of, or access to Personal Data transmitted, stored or otherwise processed."

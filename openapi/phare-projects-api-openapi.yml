@@ -1,0 +1,655 @@
+openapi: 3.2.0
+info:
+  title: Phare Projects API
+  description: Learn how to use the phare.io API. Most of the things that can be done on the web platform can also be achieved with the API documented on this page.
+  termsOfService: https://phare.io/legal/terms-of-service
+  contact:
+    name: Phare
+    email: support@phare.io
+  version: '1.0'
+servers:
+- url: https://api.phare.io
+security:
+- BearerAuth: []
+tags:
+- name: Projects
+  description: Projects
+paths:
+  /projects:
+    get:
+      tags:
+      - Projects
+      summary: List projects
+      description: Get a paginated list of projects.
+      operationId: getProjects
+      responses:
+        '200':
+          description: Success, projects retrieved
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: Project ID
+                          type: integer
+                          example: 1
+                        slug:
+                          description: Project slug
+                          type: string
+                          example: luminous-guiding-tower
+                        name:
+                          description: Project name
+                          type: string
+                          example: Luminous Guiding Tower
+                          maximum: 25
+                          minimum: 1
+                        members:
+                          description: List of team members that are part of this project
+                          type: array
+                          items:
+                            type: integer
+                          example:
+                          - 1
+                          - 2
+                          - 3
+                          maxItems: 100
+                          minItems: 1
+                        settings:
+                          description: Project settings
+                          properties:
+                            use_incident_ai:
+                              description: Whether to generate AI summaries for incidents
+                              type:
+                              - boolean
+                              - 'null'
+                              default: true
+                            use_incident_merging:
+                              description: Whether to use incident merging
+                              type:
+                              - boolean
+                              - 'null'
+                              default: true
+                            incident_merging_time_window:
+                              description: Time window for incident merging in minutes
+                              type:
+                              - integer
+                              - 'null'
+                              default: 60
+                              enum:
+                              - 5
+                              - 10
+                              - 30
+                              - 60
+                              - 120
+                              - 180
+                          type: object
+                        created_at:
+                          description: Date of creation for the entity
+                          type: string
+                          format: date-time
+                        updated_at:
+                          description: Date of last update for the entity
+                          type: string
+                          format: date-time
+                      required:
+                      - name
+                      - members
+                  meta:
+                    $ref: '#/components/schemas/meta'
+                  links:
+                    $ref: '#/components/schemas/links'
+                type: object
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/per_page'
+    post:
+      tags:
+      - Projects
+      summary: Create a project
+      operationId: createProject
+      requestBody:
+        description: Project request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Project name
+                  type: string
+                  example: Luminous Guiding Tower
+                  maximum: 25
+                  minimum: 1
+                members:
+                  description: List of team members that are part of this project
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                  - 1
+                  - 2
+                  - 3
+                  maxItems: 100
+                  minItems: 1
+                settings:
+                  description: Project settings
+                  properties:
+                    use_incident_ai:
+                      description: Whether to generate AI summaries for incidents
+                      type:
+                      - boolean
+                      - 'null'
+                      default: true
+                    use_incident_merging:
+                      description: Whether to use incident merging
+                      type:
+                      - boolean
+                      - 'null'
+                      default: true
+                    incident_merging_time_window:
+                      description: Time window for incident merging in minutes
+                      type:
+                      - integer
+                      - 'null'
+                      default: 60
+                      enum:
+                      - 5
+                      - 10
+                      - 30
+                      - 60
+                      - 120
+                      - 180
+                  type: object
+              required:
+              - name
+              - members
+      responses:
+        '201':
+          description: Success, project created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Project ID
+                    type: integer
+                    example: 1
+                  slug:
+                    description: Project slug
+                    type: string
+                    example: luminous-guiding-tower
+                  name:
+                    description: Project name
+                    type: string
+                    example: Luminous Guiding Tower
+                    maximum: 25
+                    minimum: 1
+                  members:
+                    description: List of team members that are part of this project
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  settings:
+                    description: Project settings
+                    properties:
+                      use_incident_ai:
+                        description: Whether to generate AI summaries for incidents
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      use_incident_merging:
+                        description: Whether to use incident merging
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      incident_merging_time_window:
+                        description: Time window for incident merging in minutes
+                        type:
+                        - integer
+                        - 'null'
+                        default: 60
+                        enum:
+                        - 5
+                        - 10
+                        - 30
+                        - 60
+                        - 120
+                        - 180
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - members
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '422':
+          $ref: '#/components/responses/422'
+  /projects/{projectId}:
+    get:
+      tags:
+      - Projects
+      summary: Get a project
+      description: Get a project by ID
+      operationId: getProject
+      parameters:
+      - name: projectId
+        in: path
+        description: ID of the project to show
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success, project retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Project ID
+                    type: integer
+                    example: 1
+                  slug:
+                    description: Project slug
+                    type: string
+                    example: luminous-guiding-tower
+                  name:
+                    description: Project name
+                    type: string
+                    example: Luminous Guiding Tower
+                    maximum: 25
+                    minimum: 1
+                  members:
+                    description: List of team members that are part of this project
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  settings:
+                    description: Project settings
+                    properties:
+                      use_incident_ai:
+                        description: Whether to generate AI summaries for incidents
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      use_incident_merging:
+                        description: Whether to use incident merging
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      incident_merging_time_window:
+                        description: Time window for incident merging in minutes
+                        type:
+                        - integer
+                        - 'null'
+                        default: 60
+                        enum:
+                        - 5
+                        - 10
+                        - 30
+                        - 60
+                        - 120
+                        - 180
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - members
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+    post:
+      tags:
+      - Projects
+      summary: Update a project
+      description: Update a project by ID
+      operationId: updateProject
+      parameters:
+      - name: projectId
+        in: path
+        description: ID of the project to update
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Project request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Project name
+                  type: string
+                  example: Luminous Guiding Tower
+                  maximum: 25
+                  minimum: 1
+                members:
+                  description: List of team members that are part of this project
+                  type: array
+                  items:
+                    type: integer
+                  example:
+                  - 1
+                  - 2
+                  - 3
+                  maxItems: 100
+                  minItems: 1
+                settings:
+                  description: Project settings
+                  properties:
+                    use_incident_ai:
+                      description: Whether to generate AI summaries for incidents
+                      type:
+                      - boolean
+                      - 'null'
+                      default: true
+                    use_incident_merging:
+                      description: Whether to use incident merging
+                      type:
+                      - boolean
+                      - 'null'
+                      default: true
+                    incident_merging_time_window:
+                      description: Time window for incident merging in minutes
+                      type:
+                      - integer
+                      - 'null'
+                      default: 60
+                      enum:
+                      - 5
+                      - 10
+                      - 30
+                      - 60
+                      - 120
+                      - 180
+                  type: object
+      responses:
+        '200':
+          description: Success, project updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Project ID
+                    type: integer
+                    example: 1
+                  slug:
+                    description: Project slug
+                    type: string
+                    example: luminous-guiding-tower
+                  name:
+                    description: Project name
+                    type: string
+                    example: Luminous Guiding Tower
+                    maximum: 25
+                    minimum: 1
+                  members:
+                    description: List of team members that are part of this project
+                    type: array
+                    items:
+                      type: integer
+                    example:
+                    - 1
+                    - 2
+                    - 3
+                    maxItems: 100
+                    minItems: 1
+                  settings:
+                    description: Project settings
+                    properties:
+                      use_incident_ai:
+                        description: Whether to generate AI summaries for incidents
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      use_incident_merging:
+                        description: Whether to use incident merging
+                        type:
+                        - boolean
+                        - 'null'
+                        default: true
+                      incident_merging_time_window:
+                        description: Time window for incident merging in minutes
+                        type:
+                        - integer
+                        - 'null'
+                        default: 60
+                        enum:
+                        - 5
+                        - 10
+                        - 30
+                        - 60
+                        - 120
+                        - 180
+                    type: object
+                  created_at:
+                    description: Date of creation for the entity
+                    type: string
+                    format: date-time
+                  updated_at:
+                    description: Date of last update for the entity
+                    type: string
+                    format: date-time
+                required:
+                - name
+                - members
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '422':
+          $ref: '#/components/responses/422'
+    delete:
+      tags:
+      - Projects
+      summary: Delete a project
+      description: Delete a project by ID
+      operationId: deleteProject
+      parameters:
+      - name: projectId
+        in: path
+        description: ID of the project to delete
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success, project deleted
+          content: {}
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+components:
+  schemas:
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
+    links:
+      description: Links for pagination
+      properties:
+        first:
+          type: string
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+      type: object
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+  responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
+    '404':
+      description: Error, resource not found
+      content:
+        application/json:
+          schema:
+            description: Not found error schema
+            properties:
+              message:
+                type: string
+                example: Resource not found
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: 'Use a user token to access authenticated routes. The token must be specified in the Authorization HTTP header with the following format ''Authorization: Bearer <token>''.'
+      scheme: bearer
+x-tagGroups:
+- name: Phare platform
+  tags:
+  - Users
+  - Projects
+  - Alert Rules
+- name: Phare uptime
+  tags:
+  - Monitors
+  - Incidents
+  - Status Pages
+  - Reports
