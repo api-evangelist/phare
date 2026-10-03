@@ -140,25 +140,18 @@ paths:
           $ref: '#/components/responses/404'
 components:
   schemas:
-    meta:
-      description: Meta data for pagination
-      properties:
-        current_page:
-          type: integer
-          example: 2
-        from:
-          type: integer
-          example: 11
-        to:
-          type: integer
-          example: 20
-        per_page:
-          type: integer
-          example: 100
-        path:
-          type: string
-          example: https://api.phare.io/{resource}?page=2
-      type: object
+    Platform.App.AppEnum:
+      type: string
+      enum:
+      - sms
+      - discord
+      - email
+      - ilert
+      - ntfy
+      - outgoing_webhook
+      - pushover
+      - slack
+      - telegram
     links:
       description: Links for pagination
       properties:
@@ -185,19 +178,45 @@ components:
           format: url
           example: https://api.phare.io/{resource}?page=1
       type: object
-    Platform.App.AppEnum:
-      type: string
-      enum:
-      - sms
-      - discord
-      - email
-      - ilert
-      - ntfy
-      - outgoing_webhook
-      - pushover
-      - slack
-      - telegram
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
   parameters:
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
     header_project_slug:
       name: X-Phare-Project-Slug
       in: header
@@ -215,26 +234,18 @@ components:
         type: integer
         example: 1
         default: 1
-    header_project_id:
-      name: X-Phare-Project-Id
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: integer
-        example: 1
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
   responses:
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
     '403':
       description: Error, access forbidden
       content:
@@ -256,17 +267,6 @@ components:
               message:
                 type: string
                 example: Resource not found
-            type: object
-    '401':
-      description: Error, access unauthorized
-      content:
-        application/json:
-          schema:
-            description: Access unauthorized error schema
-            properties:
-              message:
-                type: string
-                example: Unauthorized
             type: object
   securitySchemes:
     BearerAuth:

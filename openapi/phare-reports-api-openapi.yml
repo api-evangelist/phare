@@ -220,32 +220,36 @@ paths:
         '403':
           $ref: '#/components/responses/403'
 components:
+  schemas:
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    Uptime.Incident.TypeEnum:
+      type: string
+      enum:
+      - monitor
+      - manual
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
   parameters:
-    header_project_slug:
-      name: X-Phare-Project-Slug
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: string
-        example: luminous-guiding-tower
-    header_project_id:
-      name: X-Phare-Project-Id
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: integer
-        example: 1
-    page:
-      name: page
-      in: query
-      description: Page number to show
-      required: false
-      schema:
-        type: integer
-        example: 1
-        default: 1
     per_page:
       name: per_page
       in: query
@@ -257,58 +261,32 @@ components:
         default: 20
         maximum: 100
         minimum: 1
-  schemas:
-    Uptime.Incident.StateEnum:
-      type: string
-      enum:
-      - unknown
-      - investigating
-      - identified
-      - monitoring
-      - resolved
-    Uptime.Incident.TypeEnum:
-      type: string
-      enum:
-      - monitor
-      - manual
-    Uptime.Incident.StatusEnum:
-      type: string
-      enum:
-      - ongoing
-      - recovering
-      - recovered
-    Uptime.Incident.ImpactEnum:
-      type: string
-      enum:
-      - unknown
-      - operational
-      - maintenance
-      - degraded_performance
-      - partial_outage
-      - major_outage
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
   responses:
-    '403':
-      description: Error, access forbidden
-      content:
-        application/json:
-          schema:
-            description: Access forbidden error schema
-            properties:
-              message:
-                type: string
-                example: The platform:write permission is required to perform this action.
-            type: object
-    '401':
-      description: Error, access unauthorized
-      content:
-        application/json:
-          schema:
-            description: Access unauthorized error schema
-            properties:
-              message:
-                type: string
-                example: Unauthorized
-            type: object
     '422':
       description: Error, unprocessable entity
       content:
@@ -326,6 +304,28 @@ components:
                       type: string
                       example: The key field is required
                 type: object
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
             type: object
   securitySchemes:
     BearerAuth:

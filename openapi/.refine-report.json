@@ -1,7 +1,7 @@
 {
   "provider": "phare",
   "sources": [
-    "phare-openapi.json"
+    "_original/phare-openapi.json"
   ],
   "outputs": [
     "phare-alert-rules-api-openapi.yml",
@@ -15,14 +15,24 @@
     "phare-status-pages-api-openapi.yml",
     "phare-users-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/phare-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "phare-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+10 apis, 10 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "phare-alert-rules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-incidents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-maintenance-windows-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-monitors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-platform-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-status-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "phare-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

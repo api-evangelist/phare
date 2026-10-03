@@ -56,17 +56,6 @@ paths:
           $ref: '#/components/responses/403'
 components:
   responses:
-    '401':
-      description: Error, access unauthorized
-      content:
-        application/json:
-          schema:
-            description: Access unauthorized error schema
-            properties:
-              message:
-                type: string
-                example: Unauthorized
-            type: object
     '403':
       description: Error, access forbidden
       content:
@@ -77,6 +66,17 @@ components:
               message:
                 type: string
                 example: The platform:write permission is required to perform this action.
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
             type: object
   securitySchemes:
     BearerAuth:

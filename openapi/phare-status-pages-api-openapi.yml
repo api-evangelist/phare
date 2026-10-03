@@ -1999,6 +1999,53 @@ paths:
           $ref: '#/components/responses/403'
 components:
   schemas:
+    Uptime.StatusPage.SubscriptionChannelEnum:
+      type: string
+      enum:
+      - rss
+      - atom
+      - slack
+    Uptime.Incident.StatusEnum:
+      type: string
+      enum:
+      - ongoing
+      - recovering
+      - recovered
+    Uptime.Incident.ImpactEnum:
+      type: string
+      enum:
+      - unknown
+      - operational
+      - maintenance
+      - degraded_performance
+      - partial_outage
+      - major_outage
+    links:
+      description: Links for pagination
+      properties:
+        first:
+          type: string
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+      type: object
     meta:
       description: Meta data for pagination
       properties:
@@ -2026,54 +2073,26 @@ components:
       - identified
       - monitoring
       - resolved
-    Uptime.Incident.StatusEnum:
-      type: string
-      enum:
-      - ongoing
-      - recovering
-      - recovered
-    links:
-      description: Links for pagination
-      properties:
-        first:
-          type: string
-          format: url
-          example: https://api.phare.io/{resource}?page=2
-        last:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=10
-        prev:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=1
-        next:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=1
-      type: object
-    Uptime.Incident.ImpactEnum:
-      type: string
-      enum:
-      - unknown
-      - operational
-      - maintenance
-      - degraded_performance
-      - partial_outage
-      - major_outage
-    Uptime.StatusPage.SubscriptionChannelEnum:
-      type: string
-      enum:
-      - rss
-      - atom
-      - slack
   parameters:
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
     header_project_slug:
       name: X-Phare-Project-Slug
       in: header
@@ -2091,26 +2110,36 @@ components:
         type: integer
         example: 1
         default: 1
-    header_project_id:
-      name: X-Phare-Project-Id
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: integer
-        example: 1
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
   responses:
+    '422':
+      description: Error, unprocessable entity
+      content:
+        application/json:
+          schema:
+            description: Validation error schema
+            properties:
+              message:
+                type: string
+              errors:
+                properties:
+                  key:
+                    type: array
+                    items:
+                      type: string
+                      example: The key field is required
+                type: object
+            type: object
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
     '403':
       description: Error, access forbidden
       content:
@@ -2132,35 +2161,6 @@ components:
               message:
                 type: string
                 example: Resource not found
-            type: object
-    '401':
-      description: Error, access unauthorized
-      content:
-        application/json:
-          schema:
-            description: Access unauthorized error schema
-            properties:
-              message:
-                type: string
-                example: Unauthorized
-            type: object
-    '422':
-      description: Error, unprocessable entity
-      content:
-        application/json:
-          schema:
-            description: Validation error schema
-            properties:
-              message:
-                type: string
-              errors:
-                properties:
-                  key:
-                    type: array
-                    items:
-                      type: string
-                      example: The key field is required
-                type: object
             type: object
   securitySchemes:
     BearerAuth:
