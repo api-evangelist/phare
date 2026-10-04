@@ -24,6 +24,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/phare-capability-edges.yml
+  name: Phare Business Capability Map
 - type: AgenticAccess
   url: agentic-access/phare-agentic-access.yml
 - type: Plans
@@ -149,6 +152,8 @@ apis:
   humanURL: https://docs.phare.io/api-reference/introduction
   baseURL: https://api.phare.io
   tags:
+  - Integration
+  tags_raw:
   - Integrations
   properties:
   - type: OpenAPI
@@ -241,6 +246,8 @@ apis:
   humanURL: https://docs.phare.io/api-reference/introduction
   baseURL: https://api.phare.io
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -310,6 +317,8 @@ apis:
   humanURL: https://docs.phare.io/api-reference/introduction
   baseURL: https://api.phare.io
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
