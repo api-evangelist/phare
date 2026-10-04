@@ -517,28 +517,26 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 components:
-  parameters:
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
-    page:
-      name: page
-      in: query
-      description: Page number to show
-      required: false
-      schema:
-        type: integer
-        example: 1
-        default: 1
   schemas:
+    meta:
+      description: Meta data for pagination
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        from:
+          type: integer
+          example: 11
+        to:
+          type: integer
+          example: 20
+        per_page:
+          type: integer
+          example: 100
+        path:
+          type: string
+          example: https://api.phare.io/{resource}?page=2
+      type: object
     links:
       description: Links for pagination
       properties:
@@ -565,26 +563,29 @@ components:
           format: url
           example: https://api.phare.io/{resource}?page=1
       type: object
-    meta:
-      description: Meta data for pagination
-      properties:
-        current_page:
-          type: integer
-          example: 2
-        from:
-          type: integer
-          example: 11
-        to:
-          type: integer
-          example: 20
-        per_page:
-          type: integer
-          example: 100
-        path:
-          type: string
-          example: https://api.phare.io/{resource}?page=2
-      type: object
   responses:
+    '401':
+      description: Error, access unauthorized
+      content:
+        application/json:
+          schema:
+            description: Access unauthorized error schema
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+            type: object
+    '404':
+      description: Error, resource not found
+      content:
+        application/json:
+          schema:
+            description: Not found error schema
+            properties:
+              message:
+                type: string
+                example: Resource not found
+            type: object
     '422':
       description: Error, unprocessable entity
       content:
@@ -603,17 +604,6 @@ components:
                       example: The key field is required
                 type: object
             type: object
-    '401':
-      description: Error, access unauthorized
-      content:
-        application/json:
-          schema:
-            description: Access unauthorized error schema
-            properties:
-              message:
-                type: string
-                example: Unauthorized
-            type: object
     '403':
       description: Error, access forbidden
       content:
@@ -625,17 +615,27 @@ components:
                 type: string
                 example: The platform:write permission is required to perform this action.
             type: object
-    '404':
-      description: Error, resource not found
-      content:
-        application/json:
-          schema:
-            description: Not found error schema
-            properties:
-              message:
-                type: string
-                example: Resource not found
-            type: object
+  parameters:
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
   securitySchemes:
     BearerAuth:
       type: http
