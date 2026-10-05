@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.phare.io/openapi.json",
+ "requested_url": "https://docs.phare.io/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 610134,
+ "sha256": "ded6c5181c49255293d02f2e6021ee43eb120eec0df64d46dda7c8c24908f5a5",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
