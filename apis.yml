@@ -11,7 +11,7 @@ x-tier: profiled
 x-tier-reason: enrichment pass 2026-09-27 (modular-v1; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-27'
-modified: '2026-09-27'
+modified: '2026-10-06'
 tags:
 - Company
 - Monitoring
@@ -24,6 +24,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- url: https://phare.io/blog/rss/
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/phare-capability-edges.yml
   name: Phare Business Capability Map
