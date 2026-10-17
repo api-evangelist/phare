@@ -515,6 +515,52 @@ paths:
           $ref: '#/components/responses/404'
 components:
   schemas:
+    Platform.App.Pushover.AlertRuleSettings:
+      title: Pushover
+      properties:
+        priority:
+          description: Notification priority level
+          type: string
+          example: normal
+          enum:
+          - lowest
+          - low
+          - normal
+          - high
+          - emergency
+        retry:
+          description: Retry interval in seconds (required for emergency priority)
+          type:
+          - integer
+          - 'null'
+          example: 300
+          maximum: 86400
+          minimum: 30
+        expire:
+          description: Expiration time in seconds (required for emergency priority)
+          type:
+          - integer
+          - 'null'
+          example: 3600
+          maximum: 10800
+          minimum: 30
+      type: object
+    Platform.App.Ntfy.AlertRuleSettings:
+      title: Ntfy
+      required:
+      - priority
+      properties:
+        priority:
+          description: Notification priority level
+          type: string
+          example: default
+          enum:
+          - min
+          - low
+          - default
+          - high
+          - max
+      type: object
     meta:
       description: Meta data for pagination
       properties:
@@ -534,32 +580,6 @@ components:
           type: string
           example: https://api.phare.io/{resource}?page=2
       type: object
-    links:
-      description: Links for pagination
-      properties:
-        first:
-          type: string
-          format: url
-          example: https://api.phare.io/{resource}?page=2
-        last:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=10
-        prev:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=1
-        next:
-          type:
-          - string
-          - 'null'
-          format: url
-          example: https://api.phare.io/{resource}?page=1
-      type: object
     Platform.App.OutgoingWebhook.AlertRuleSettings:
       title: Outgoing Webhooks
       required:
@@ -571,18 +591,6 @@ components:
           format: json
           example: '{"id": "{{ alert_rule_request.id }}", "event": "{{ event.key }}"}'
           maxLength: 5000
-      type: object
-    Platform.Event.UptimeMonitorCertificateExpiring.AlertRuleSettings:
-      title: Uptime certificate expiring
-      required:
-      - days_before_expiry
-      properties:
-        days_before_expiry:
-          description: Days to notify before the certificate expires
-          type: integer
-          example: 25
-          maximum: 60
-          minimum: 1
       type: object
     Platform.Event.UptimeIncident.AlertRuleSettings:
       title: Uptime incident
@@ -614,53 +622,93 @@ components:
       - uptime.maintenance_window.in_progress
       - uptime.maintenance_window.completed
       - uptime.maintenance_window.cancelled
-    Platform.App.Ntfy.AlertRuleSettings:
-      title: Ntfy
+    Platform.Event.UptimeMonitorCertificateExpiring.AlertRuleSettings:
+      title: Uptime certificate expiring
       required:
-      - priority
+      - days_before_expiry
       properties:
-        priority:
-          description: Notification priority level
-          type: string
-          example: default
-          enum:
-          - min
-          - low
-          - default
-          - high
-          - max
+        days_before_expiry:
+          description: Days to notify before the certificate expires
+          type: integer
+          example: 25
+          maximum: 60
+          minimum: 1
       type: object
-    Platform.App.Pushover.AlertRuleSettings:
-      title: Pushover
+    links:
+      description: Links for pagination
       properties:
-        priority:
-          description: Notification priority level
+        first:
           type: string
-          example: normal
-          enum:
-          - lowest
-          - low
-          - normal
-          - high
-          - emergency
-        retry:
-          description: Retry interval in seconds (required for emergency priority)
+          format: url
+          example: https://api.phare.io/{resource}?page=2
+        last:
           type:
-          - integer
+          - string
           - 'null'
-          example: 300
-          maximum: 86400
-          minimum: 30
-        expire:
-          description: Expiration time in seconds (required for emergency priority)
+          format: url
+          example: https://api.phare.io/{resource}?page=10
+        prev:
           type:
-          - integer
+          - string
           - 'null'
-          example: 3600
-          maximum: 10800
-          minimum: 30
+          format: url
+          example: https://api.phare.io/{resource}?page=1
+        next:
+          type:
+          - string
+          - 'null'
+          format: url
+          example: https://api.phare.io/{resource}?page=1
       type: object
+  parameters:
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
   responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
     '401':
       description: Error, access unauthorized
       content:
@@ -701,54 +749,6 @@ components:
                       example: The key field is required
                 type: object
             type: object
-    '403':
-      description: Error, access forbidden
-      content:
-        application/json:
-          schema:
-            description: Access forbidden error schema
-            properties:
-              message:
-                type: string
-                example: The platform:write permission is required to perform this action.
-            type: object
-  parameters:
-    header_project_id:
-      name: X-Phare-Project-Id
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: integer
-        example: 1
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
-    header_project_slug:
-      name: X-Phare-Project-Slug
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: string
-        example: luminous-guiding-tower
-    page:
-      name: page
-      in: query
-      description: Page number to show
-      required: false
-      schema:
-        type: integer
-        example: 1
-        default: 1
   securitySchemes:
     BearerAuth:
       type: http

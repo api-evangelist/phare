@@ -517,6 +517,27 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 components:
+  parameters:
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
   schemas:
     meta:
       description: Meta data for pagination
@@ -564,6 +585,17 @@ components:
           example: https://api.phare.io/{resource}?page=1
       type: object
   responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
     '401':
       description: Error, access unauthorized
       content:
@@ -604,38 +636,6 @@ components:
                       example: The key field is required
                 type: object
             type: object
-    '403':
-      description: Error, access forbidden
-      content:
-        application/json:
-          schema:
-            description: Access forbidden error schema
-            properties:
-              message:
-                type: string
-                example: The platform:write permission is required to perform this action.
-            type: object
-  parameters:
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
-    page:
-      name: page
-      in: query
-      description: Page number to show
-      required: false
-      schema:
-        type: integer
-        example: 1
-        default: 1
   securitySchemes:
     BearerAuth:
       type: http

@@ -2082,6 +2082,19 @@ paths:
           $ref: '#/components/responses/403'
 components:
   schemas:
+    Uptime.Incident.StateEnum:
+      type: string
+      enum:
+      - unknown
+      - investigating
+      - identified
+      - monitoring
+      - resolved
+    Uptime.Monitor.ConnectionEnum:
+      type: string
+      enum:
+      - plain
+      - tls
     meta:
       description: Meta data for pagination
       properties:
@@ -2101,14 +2114,14 @@ components:
           type: string
           example: https://api.phare.io/{resource}?page=2
       type: object
-    Uptime.Incident.StateEnum:
+    Uptime.Monitor.StatusEnum:
       type: string
       enum:
-      - unknown
-      - investigating
-      - identified
-      - monitoring
-      - resolved
+      - fetching
+      - online
+      - offline
+      - partial
+      - paused
     Uptime.Monitor.RegionEnum:
       type: string
       enum:
@@ -2125,11 +2138,11 @@ components:
       - na-usa-sea
       - oc-aus-syd
       - sa-bra-gru
-    Uptime.Monitor.ConnectionEnum:
+    Uptime.Monitor.ProtocolEnum:
       type: string
       enum:
-      - plain
-      - tls
+      - http
+      - tcp
     Uptime.Incident.TypeEnum:
       type: string
       enum:
@@ -2144,14 +2157,6 @@ components:
       - degraded_performance
       - partial_outage
       - major_outage
-    Uptime.Monitor.StatusEnum:
-      type: string
-      enum:
-      - fetching
-      - online
-      - offline
-      - partial
-      - paused
     Uptime.Incident.StatusEnum:
       type: string
       enum:
@@ -2184,12 +2189,55 @@ components:
           format: url
           example: https://api.phare.io/{resource}?page=1
       type: object
-    Uptime.Monitor.ProtocolEnum:
-      type: string
-      enum:
-      - http
-      - tcp
+  parameters:
+    header_project_id:
+      name: X-Phare-Project-Id
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: integer
+        example: 1
+    per_page:
+      name: per_page
+      in: query
+      description: Number of resources to return per page
+      required: false
+      schema:
+        type: integer
+        example: 20
+        default: 20
+        maximum: 100
+        minimum: 1
+    header_project_slug:
+      name: X-Phare-Project-Slug
+      in: header
+      description: A project header is required when using an organization-scoped API key.
+      required: false
+      schema:
+        type: string
+        example: luminous-guiding-tower
+    page:
+      name: page
+      in: query
+      description: Page number to show
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
   responses:
+    '403':
+      description: Error, access forbidden
+      content:
+        application/json:
+          schema:
+            description: Access forbidden error schema
+            properties:
+              message:
+                type: string
+                example: The platform:write permission is required to perform this action.
+            type: object
     '401':
       description: Error, access unauthorized
       content:
@@ -2230,54 +2278,6 @@ components:
                       example: The key field is required
                 type: object
             type: object
-    '403':
-      description: Error, access forbidden
-      content:
-        application/json:
-          schema:
-            description: Access forbidden error schema
-            properties:
-              message:
-                type: string
-                example: The platform:write permission is required to perform this action.
-            type: object
-  parameters:
-    header_project_id:
-      name: X-Phare-Project-Id
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: integer
-        example: 1
-    per_page:
-      name: per_page
-      in: query
-      description: Number of resources to return per page
-      required: false
-      schema:
-        type: integer
-        example: 20
-        default: 20
-        maximum: 100
-        minimum: 1
-    header_project_slug:
-      name: X-Phare-Project-Slug
-      in: header
-      description: A project header is required when using an organization-scoped API key.
-      required: false
-      schema:
-        type: string
-        example: luminous-guiding-tower
-    page:
-      name: page
-      in: query
-      description: Page number to show
-      required: false
-      schema:
-        type: integer
-        example: 1
-        default: 1
   securitySchemes:
     BearerAuth:
       type: http
