@@ -1,4 +1,48 @@
 edges:
+- partner_name: Raycast
+  partner: raycast
+  partner_match: domain
+  partner_url: https://www.raycast.com
+  partner_domain: raycast.com
+  type: marketplace
+  marketplace: raycast-store
+  channel: connector-listing
+  relationship: connector-coverage
+  evidence: https://www.raycast.com/ApopeOS/phare-io-uptime
+  app: Phare.io Uptime
+  category: Raycast Store extension (community wrapper)
+  listing_count: 1
+  contract_reference:
+    register: Raycast Store (raycast/extensions monorepo + store_listings JSON)
+    spec_file: null
+    role: raycast-community-wrapper
+    builder: community
+    authors:
+    - ApopeOS
+    matched_domain: phare.io
+    matched_by: domain
+    monorepo_commit: 84f9ac51336a8c69f70974a75bc067c0feae3658
+    listings:
+    - title: Phare.io Uptime
+      store_url: https://www.raycast.com/ApopeOS/phare-io-uptime
+      installs: 4
+      categories:
+      - Developer Tools
+      - Data
+      source: https://github.com/raycast/extensions/tree/84f9ac51336a8c69f70974a75bc067c0feae3658/extensions/phare-io-uptime/
+      author: ApopeOS
+    categories:
+    - Data
+    - Developer Tools
+    identity_note: the extension's own source calls a host on the product's domain AND its title / package name
+      passes partner_link's name check; built by Raycast community developers, not the vendor
+    signal_note: 'coverage: Raycast''s store reaches the product through community-built extensions; one edge per
+      (product, store); install / listing counts are context, never counted'
+    detected_by: sweep-raycast-store-extensions.py
+    detected: '2026-10-22'
+  detected_by: sweep-raycast-store-extensions.py
+  first_seen: '2026-10-22'
+  direction: partner-built
 - partner_name: Slack (own)
   partner: slack
   partner_match: mirror
@@ -50,50 +94,25 @@ edges:
   detected: '2026-10-21'
   detected_by: mirror-platform-listings.py
   category: infrastructure-as-code provider registry listing
-- partner_name: Raycast
-  partner: raycast
-  partner_match: domain
-  partner_url: https://www.raycast.com
-  partner_domain: raycast.com
+- partner_name: Discord (discord-app-directory)
+  partner: discord
+  partner_match: mirror
+  mirror_match: domain
   type: marketplace
-  marketplace: raycast-store
-  channel: connector-listing
-  relationship: connector-coverage
-  evidence: https://www.raycast.com/ApopeOS/phare-io-uptime
-  app: Phare.io Uptime
-  category: Raycast Store extension (community wrapper)
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: discord-app-directory
+  evidence: https://discord.com/discovery/applications/1073653767829987458
+  mirror_of: discord/integrations/discord-integration-edges.yml
+  apps:
+  - Phare
   listing_count: 1
-  contract_reference:
-    register: Raycast Store (raycast/extensions monorepo + store_listings JSON)
-    spec_file: null
-    role: raycast-community-wrapper
-    builder: community
-    authors:
-    - ApopeOS
-    matched_domain: phare.io
-    matched_by: domain
-    monorepo_commit: 84f9ac51336a8c69f70974a75bc067c0feae3658
-    listings:
-    - title: Phare.io Uptime
-      store_url: https://www.raycast.com/ApopeOS/phare-io-uptime
-      installs: 4
-      categories:
-      - Developer Tools
-      - Data
-      source: https://github.com/raycast/extensions/tree/84f9ac51336a8c69f70974a75bc067c0feae3658/extensions/phare-io-uptime/
-      author: ApopeOS
-    categories:
-    - Data
-    - Developer Tools
-    identity_note: the extension's own source calls a host on the product's domain AND its title / package name
-      passes partner_link's name check; built by Raycast community developers, not the vendor
-    signal_note: 'coverage: Raycast''s store reaches the product through community-built extensions; one edge per
-      (product, store); install / listing counts are context, never counted'
-    detected_by: sweep-raycast-store-extensions.py
-    detected: '2026-10-22'
-  detected_by: sweep-raycast-store-extensions.py
-  first_seen: '2026-10-22'
-  direction: partner-built
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Moderation and Tools, Utilities
+  publisher_verified:
+  - discord-verified-app
 generated: '2026-10-15'
 method: searched
 source:
@@ -105,3 +124,4 @@ checked:
 - terraform/integrations/terraform-integration-edges.yml
 - https://github.com/raycast/extensions/tree/84f9ac51336a8c69f70974a75bc067c0feae3658/extensions
 - https://www.raycast.com/api/v1/store_listings
+- discord/integrations/discord-integration-edges.yml
